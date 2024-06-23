@@ -1,39 +1,23 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import Row from "$lib/Row.svelte";
+  import { measurementNames, sizes, type Size } from "$lib/measurements.js";
 
   const { data } = $props();
 
   let projectName = $state(data.name || "");
-  $effect(() => $page.url.searchParams.set("projectName", projectName));
-
-  const rows = [
-    "Ärmhålsdjup",
-    "Livlängd, bak",
-    "Klänningslängd",
-    "Bystvidd",
-    "Midjevidd",
-    "Höftvidd",
-    "Höftläge",
-    "Stussvidd",
-    "Stussläge",
-    "Ryggbredd",
-    "Halsvidd",
-    "Axelbredd",
-    "Ärmlängd",
-    "Överarmsvidd",
-    "Armbågdsidd",
-    "Handledsvidd",
-    "Bysthöjd",
-    "Livlängd, fram",
-    "Bystveck",
-    "Ärmhål",
-  ];
+  let size = $state<Size>(12);
 </script>
 
 <section>
   <h1>{projectName}</h1>
   <a href="./">Tillbaka</a>
+
+  <label for="size">Storlek</label>
+  <select id="size" bind:value={size}>
+    {#each sizes as s}
+      <option value={s}>{s}</option>
+    {/each}
+  </select>
 </section>
 
 <section>
@@ -49,8 +33,8 @@
       </tr>
     </thead>
     <tbody>
-      {#each rows as row}
-        <Row name={row} />
+      {#each measurementNames as row}
+        <Row name={row} {size} />
       {/each}
     </tbody>
   </table>
