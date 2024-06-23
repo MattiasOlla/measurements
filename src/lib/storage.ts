@@ -17,7 +17,8 @@ export function getProjects() {
   return JSON.parse(stored) as { [key: string]: Project };
 }
 
-export function getProject(slug: string) {
+export function getProject(slug: string | null) {
+  if (!slug) return null;
   return getProjects()[slug] || null;
 }
 

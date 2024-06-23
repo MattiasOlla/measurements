@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { base } from "$app/paths";
   import { createNewProject } from "$lib/storage";
 
   const { data } = $props();
@@ -11,7 +12,7 @@
 
   function addProject() {
     const project = createNewProject(newProjectName);
-    goto(`./${project.slug}`);
+    goto(`${base}/project?name=${project.slug}`);
   }
 </script>
 
@@ -20,7 +21,7 @@
 <ul>
   {#each projects as project}
     <li>
-      <a href={`./${project.slug}`}>{project.name}</a>
+      <a href={`${base}/project?name=${project.slug}`}>{project.name}</a>
     </li>
   {/each}
 </ul>
