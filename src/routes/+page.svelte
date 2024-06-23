@@ -1,59 +1,29 @@
-<script>
-  import Counter from "./Counter.svelte";
-  import welcome from "$lib/images/svelte-welcome.webp";
-  import welcome_fallback from "$lib/images/svelte-welcome.png";
+<script lang="ts">
+  import { goto } from "$app/navigation";
+  import { createNewProject } from "$lib/storage";
+
+  const { data } = $props();
+  const projects = Object.values(data.projects || {}).sort(
+    (p1, p2) => Date.parse(p2.created) - Date.parse(p1.created),
+  );
+
+  let newProjectName = $state("");
+
+  function addProject() {
+    const project = createNewProject(newProjectName);
+    goto(`./${project.slug}`);
+  }
 </script>
 
-<svelte:head>
-  <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
-</svelte:head>
+<h1>Mina projekt</h1>
 
-<section>
-  <h1>
-    <span class="welcome">
-      <picture>
-        <source srcset={welcome} type="image/webp" />
-        <img src={welcome_fallback} alt="Welcome" />
-      </picture>
-    </span>
+<ul>
+  {#each projects as project}
+    <li>
+      <a href={`./${project.slug}`}>{project.name}</a>
+    </li>
+  {/each}
+</ul>
 
-    to your new<br />SvelteKit app
-  </h1>
-
-  <h2>
-    try editing <strong>src/routes/+page.svelte</strong>
-  </h2>
-
-  <Counter />
-</section>
-
-<style>
-  section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 0.6;
-  }
-
-  h1 {
-    width: 100%;
-  }
-
-  .welcome {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding: 0 0 calc(100% * 495 / 2048) 0;
-  }
-
-  .welcome img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    display: block;
-  }
-</style>
+<input type="text" placeholder="Nytt projekt" bind:value={newProjectName} />
+<button onclick={() => addProject()}>Lägg till</button>
