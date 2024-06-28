@@ -1,29 +1,28 @@
 <script lang="ts">
-  import { measurements, type Measurement, type MeasurementNames, type Size } from "./measurements";
+  import { type Measurement, type Size } from "./measurements";
 
-  let { name, size }: { name: MeasurementNames; size: Size } = $props();
-  const measurementConfig: Measurement = measurements.find((m) => m.name === name)!;
+  let { measurement, size }: { measurement: Measurement; size: Size } = $props();
 
   let value = $state<number | null>(null);
   let manualMargin = $state<number>(0);
 
   const valueWithMargin = $derived.by(() => {
     if (value === null) return null;
-    switch (measurementConfig.allowance) {
+    switch (measurement.allowance) {
       case "none":
         return value;
       case "manual":
         return value + manualMargin;
       case "table":
-        return value + measurementConfig.range({ size });
+        return value + measurement.range({ size });
     }
   });
 </script>
 
 <tr>
-  <td>{name}</td>
+  <td>{measurement.name}</td>
   <td><input type="number" size="4" bind:value /> </td>
-  {#if measurementConfig.allowance === "manual"}
+  {#if measurement.allowance === "manual"}
     <td><input type="number" size="4" bind:value={manualMargin} /> </td>
   {:else}
     <td></td>

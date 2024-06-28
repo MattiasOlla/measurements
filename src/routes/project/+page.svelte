@@ -1,6 +1,6 @@
 <script lang="ts">
   import Row from "$lib/Row.svelte";
-  import { measurementNames, sizes, type Size } from "$lib/measurements.js";
+  import { measurements, sizes, type Size } from "$lib/measurements.js";
 
   const { data } = $props();
 
@@ -33,8 +33,8 @@
       </tr>
     </thead>
     <tbody>
-      {#each measurementNames as row}
-        <Row name={row} {size} />
+      {#each measurements as measurement}
+        <Row {measurement} {size} />
       {/each}
     </tbody>
   </table>
