@@ -28,7 +28,6 @@
         <th>Kroppsmått</th>
         <th>+/-</th>
         <th>Inkl. rörelsevidd</th>
-        <th>:2</th>
         <th>Konstr. mått</th>
       </tr>
     </thead>
