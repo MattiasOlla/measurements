@@ -9,47 +9,47 @@ type SizeArgs = {
 export type Measurement =
   | {
       name: string;
-      allowance: "none" | "manual";
+      allowanceType: "none" | "manual";
     }
   | {
       name: string;
-      allowance: "table";
-      range: (args: SizeArgs) => number;
+      allowanceType: "table";
+      allowance: (args: SizeArgs) => number;
     };
 
 export const measurements = [
-  { name: "Ärmhålsdjup", allowance: "table", range: ({ size }) => (size - 6) / 2 },
-  { name: "Livlängd, bak", allowance: "none" },
-  { name: "Klänningslängd", allowance: "none" },
-  { name: "Bystvidd", allowance: "table", range: ({ size }) => size },
-  { name: "Midjevidd", allowance: "manual" },
-  { name: "Höftvidd", allowance: "manual" },
-  { name: "Höftläge", allowance: "none" },
+  { name: "Ärmhålsdjup", allowanceType: "table", allowance: ({ size }) => (size - 6) / 2 },
+  { name: "Livlängd, bak", allowanceType: "none" },
+  { name: "Klänningslängd", allowanceType: "none" },
+  { name: "Bystvidd", allowanceType: "table", allowance: ({ size }) => size },
+  { name: "Midjevidd", allowanceType: "manual" },
+  { name: "Höftvidd", allowanceType: "manual" },
+  { name: "Höftläge", allowanceType: "none" },
   {
     name: "Stussvidd",
-    allowance: "table",
-    range: ({ size }) => {
+    allowanceType: "table",
+    allowance: ({ size }) => {
       if (size === 2) return 2;
       if (size === 4) return 3;
       return size - 2;
     },
   },
-  { name: "Stussläge", allowance: "none" },
-  { name: "Ryggbredd", allowance: "table", range: ({ size }) => ((size - 2) / 2) * 0.6 },
+  { name: "Stussläge", allowanceType: "none" },
+  { name: "Ryggbredd", allowanceType: "table", allowance: ({ size }) => ((size - 2) / 2) * 0.6 },
   {
     name: "Halsvidd",
-    allowance: "table",
-    range: ({ size }) => (size < 6 ? 0 : ((size - 6) / 2) * 0.75),
+    allowanceType: "table",
+    allowance: ({ size }) => (size < 6 ? 0 : ((size - 6) / 2) * 0.75),
   },
   {
     name: "Axelbredd",
-    allowance: "table",
-    range: ({ size }) => (size < 10 ? 0 : ((size - 10) / 2) * 0.2),
+    allowanceType: "table",
+    allowance: ({ size }) => (size < 10 ? 0 : ((size - 10) / 2) * 0.2),
   },
   {
     name: "Ärmlängd",
-    allowance: "table",
-    range: ({ size }) => {
+    allowanceType: "table",
+    allowance: ({ size }) => {
       if (size <= 10) return 0;
       if (size <= 14) return 1; // TODO: what does "ev" mean?
       return 2; // TODO: what does "ev" mean?
@@ -57,13 +57,13 @@ export const measurements = [
   },
   {
     name: "Överarmsvidd",
-    allowance: "table",
-    range: ({ size }) => (size - 2) / 2 + 3, // TODO: Handle "3 à 4" etc.
+    allowanceType: "table",
+    allowance: ({ size }) => (size - 2) / 2 + 3, // TODO: Handle "3 à 4" etc.
   },
-  { name: "Armbågdsvidd", allowance: "none" }, // TODO: implement this
-  { name: "Handledsvidd", allowance: "none" }, // TODO: implement this
-  { name: "Bysthöjd", allowance: "none" }, // TODO: implement this
-  { name: "Livlängd, fram", allowance: "none" }, // TODO: implement this
-  { name: "Bystveck", allowance: "none" }, // TODO: implement this
-  { name: "Ärmhål", allowance: "none" }, // TODO: implement this
+  { name: "Armbågdsvidd", allowanceType: "none" }, // TODO: implement this
+  { name: "Handledsvidd", allowanceType: "none" }, // TODO: implement this
+  { name: "Bysthöjd", allowanceType: "none" }, // TODO: implement this
+  { name: "Livlängd, fram", allowanceType: "none" }, // TODO: implement this
+  { name: "Bystveck", allowanceType: "none" }, // TODO: implement this
+  { name: "Ärmhål", allowanceType: "none" }, // TODO: implement this
 ] as const satisfies Measurement[];
