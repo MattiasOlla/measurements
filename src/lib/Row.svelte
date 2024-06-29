@@ -13,7 +13,7 @@
       case "manual":
         return manualAllowance;
       case "table":
-        return measurement.allowance({ size });
+        return parseFloat(measurement.allowance({ size }).toFixed(2));
     }
   });
 </script>
