@@ -6,15 +6,14 @@
   let value = $state<number | null>(null);
   let manualAllowance = $state<number>(0);
 
-  const valueWithMargin = $derived.by(() => {
-    if (value === null) return null;
+  const allowance = $derived.by(() => {
     switch (measurement.allowanceType) {
       case "none":
-        return value;
+        return 0;
       case "manual":
-        return value + manualAllowance;
+        return manualAllowance;
       case "table":
-        return value + measurement.allowance({ size });
+        return measurement.allowance({ size });
     }
   });
 </script>
@@ -22,13 +21,15 @@
 <tr>
   <td>{measurement.name}</td>
   <td><input type="number" size="4" bind:value /> </td>
-  {#if measurement.allowanceType === "manual"}
-    <td><input type="number" size="4" bind:value={manualAllowance} /> </td>
-  {:else}
-    <td></td>
-  {/if}
-  <td>{valueWithMargin}</td>
-  <td>{valueWithMargin && valueWithMargin / 2}</td>
+  <td>
+    {#if measurement.allowanceType === "manual"}
+      <input type="number" size="4" bind:value={manualAllowance} />
+    {:else if measurement.allowanceType === "table"}
+      {allowance}
+    {/if}
+  </td>
+  <td>{value && value + allowance}</td>
+  <td>{value && (value + allowance) / 2}</td>
 </tr>
 
 <style>
