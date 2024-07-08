@@ -3,7 +3,9 @@
   import { signIn, signOut } from "@auth/sveltekit/client";
   import "sakura.css";
 
-  const user = $page?.data?.session?.user;
+  let { children } = $props();
+
+  const user = $derived($page?.data?.session?.user);
 </script>
 
 <div class="app">
@@ -22,7 +24,8 @@
         <button onclick={() => signIn("google")}>Sign In with Google</button>
       {/if}
     </div>
-    <slot />
+
+    {@render children()}
   </main>
 </div>
 
