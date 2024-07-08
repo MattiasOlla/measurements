@@ -7,8 +7,8 @@ export type Project = {
   slug: string;
   size: number;
   notes?: string;
-  created: string;
-  updated: string;
+  created: Date;
+  updated: Date;
   fields: { [key: string]: { value?: number; manualAllowance?: number } };
 };
 
