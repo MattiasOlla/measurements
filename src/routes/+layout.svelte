@@ -3,7 +3,7 @@
   import { signIn, signOut } from "@auth/sveltekit/client";
   import "sakura.css";
 
-  let { children } = $props();
+  let { children } = $props()
 
   const user = $derived($page?.data?.session?.user);
 </script>
