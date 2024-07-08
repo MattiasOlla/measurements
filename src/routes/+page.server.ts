@@ -1,9 +1,6 @@
-import { db } from "$lib/db";
-
-export const load = async () => {
-  // console.log(import.meta.env.VITE_FIRESTORE_EMULATOR_HOST);
-  console.log("HELLO");
-  // await db.collection("users").doc("test1").create({ foo: 123 });
-  console.log({ data: (await db.collection("users").doc("mattias").get()).data() });
-  return {};
+import type { PageServerLoad } from "./$types";
+export const load: PageServerLoad = async (event) => {
+  const session = await event.locals.auth();
+  if (session) console.log(session.user);
+  return { projects: [] };
 };

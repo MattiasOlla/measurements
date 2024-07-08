@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import { base } from "$app/paths";
   import { createNewProject } from "$lib/storage";
-
   const { data } = $props();
   const projects = Object.values(data.projects || {}).sort(
     (p1, p2) => Date.parse(p2.created) - Date.parse(p1.created),
