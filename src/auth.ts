@@ -20,6 +20,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       return token;
     },
   },
+  trustHost: true,
 });
 
 declare module "@auth/core/types" {
