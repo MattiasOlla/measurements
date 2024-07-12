@@ -1,80 +1,65 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import Row from "$lib/Row.svelte";
+  import { debounce } from "$lib/debounce.js";
   import { measurements, sizes, type Size } from "$lib/measurements.js";
+  import { assertProjectFields } from "$lib/storage";
 
   const { data } = $props();
-  const project = $state(data.project);
-</script>
-
-{#if project}
-  <section>
-    <h1>{project.name}</h1>
-    <a href="./">Tillbaka</a>
-
-    <label for="size">Storlek</label>
-    <select id="size" bind:value={project.size}>
-      {#each sizes as s}
-        <option value={s}>{s}</option>
-      {/each}
-    </select>
-  </section>
-
-  <section>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Kroppsmått</th>
-          <th>+/-</th>
-          <th>Inkl. rörelsevidd</th>
-          <th>Konstr. mått</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each measurements as measurement}
-          <Row {measurement} size={project.size as Size} />
-          <!-- initialValue={project.fields?.[measurement.name]?.value}
-          initialManualAllowance={project.fields?.[measurement.name]?.manualAllowance}
-          onUpdate={(value, allowance) => {
-            console.log({ name: measurement.name, value, allowance });
-            project.fields = {
-              ...project.fields,
-              [measurement.name]: { value, manualAllowance: allowance },
-            };
-            saveProject(project);
-          }} -->
-        {/each}
-      </tbody>
-    </table>
-  </section>
-{/if}
-
-<!-- <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { base } from "$app/paths";
-  import { createNewProject } from "$lib/storage";
-  const { data } = $props();
-  const projects = Object.values(data.projects || {}).sort(
-    (p1, p2) => Date.parse(p2.created) - Date.parse(p1.created),
+  const project = $state(
+    assertProjectFields(data.activeProject || { name: "Untitled", size: 12 as Size }),
   );
 
-  let newProjectName = $state("");
+  const save = debounce(async (proj) => {
+    if (!$page?.data?.session?.user) {
+      console.log("not logged in, not saving");
+      return;
+    }
+    console.log("saving", proj);
 
-  function addProject() {
-    const project = createNewProject(newProjectName);
-    goto(`${base}/project?name=${project.slug}`);
-  }
+    await fetch("/api/projects", {
+      method: "PUT",
+      body: JSON.stringify(proj),
+      headers: { "content-type": "application/json" },
+    })
+      .then((resp) => resp.json())
+      .then((data) => console.log("Received response", data))
+      .catch(console.error);
+  }, 1000);
+
+  $effect(() => save($state.snapshot(project)));
 </script>
 
-<h1>Mina projekt</h1>
+<section>
+  <h1>{project.name}</h1>
+  <label for="size">Storlek</label>
+  <select id="size" bind:value={project.size}>
+    {#each sizes as s}
+      <option value={s} selected={s === project.size}>{s}</option>
+    {/each}
+  </select>
+</section>
 
-<ul>
-  {#each projects as project}
-    <li>
-      <a href={`${base}/project?name=${project.slug}`}>{project.name}</a>
-    </li>
-  {/each}
-</ul>
-
-<input type="text" placeholder="Nytt projekt" bind:value={newProjectName} />
-<button onclick={() => addProject()}>Lägg till</button> -->
+<section>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Kroppsmått</th>
+        <th>+/-</th>
+        <th>Inkl. rörelsevidd</th>
+        <th>Konstr. mått</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each measurements as measurement}
+        <Row
+          {measurement}
+          size={project.size}
+          bind:value={project.fields[measurement.name].value}
+          bind:manualAllowance={project.fields[measurement.name].manualAllowance}
+        />
+      {/each}
+    </tbody>
+  </table>
+</section>

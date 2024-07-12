@@ -11,13 +11,29 @@ const projectSubCollection = "projects";
 
 export const db = new Firestore();
 
-export async function upsertUser(id: string) {
-  await db.collection(userCollection).doc(id).set({ lastActive: new Date() }, { merge: true });
+export async function upsertUser(userId: string) {
+  await db.collection(userCollection).doc(userId).set({ lastActive: new Date() }, { merge: true });
 }
 
-export async function getUserProjects(id: string) {
+export async function getUserProjects(userId: string) {
   const projects: Project[] = [];
-  const ref = await db.collection(userCollection).doc(id).collection(projectSubCollection).get();
+  const ref = await db
+    .collection(userCollection)
+    .doc(userId)
+    .collection(projectSubCollection)
+    .orderBy("updatedAt")
+    .get();
   ref.forEach((r) => projects.push(r.data() as Project));
   return projects;
+}
+
+export async function upsertProject(userId: string, project: Project) {
+  project.updated = new Date();
+  await db
+    .collection(userCollection)
+    .doc(userId)
+    .collection(projectSubCollection)
+    .doc(project.slug)
+    .set(project, { merge: true });
+  return project;
 }

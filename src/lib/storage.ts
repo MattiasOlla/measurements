@@ -1,47 +1,41 @@
 import slugify from "slugify";
+import { measurements, type MeasurementName, type Size } from "./measurements";
 
 export const STORAGE_KEY = "projects";
 
 export type Project = {
   name: string;
   slug: string;
-  size: number;
+  size: Size;
   notes?: string;
   created: Date;
   updated: Date;
-  fields: { [key: string]: { value?: number; manualAllowance?: number } };
+  fields: Record<MeasurementName, { value: number | null; manualAllowance?: number }>;
 };
 
-export function getProjects() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) return {};
-  return JSON.parse(stored) as { [key: string]: Project };
-}
-
-export function getProject(slug: string | null) {
-  if (!slug) return null;
-  return getProjects()[slug] || null;
-}
-
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
-export function saveProject(project: Optional<Project, "updated" | "fields">) {
-  const updatedProject: Project = {
-    ...project,
-    updated: new Date().toISOString(),
-    fields: project.fields || {},
-  };
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({ ...getProjects(), [project.slug]: updatedProject }),
-  );
-  return updatedProject;
-}
 
-export function createNewProject(name: string) {
-  return saveProject({
-    name: name,
-    slug: slugify(name, { lower: true }),
-    size: 12,
-    created: new Date().toISOString(),
+export function assertProjectFields(
+  partialProject: Optional<Project, "slug" | "created" | "updated" | "fields">,
+) {
+  // @ts-expect-error Type not ready yet
+  partialProject.fields = partialProject.fields || {};
+
+  measurements.forEach((measurement) => {
+    if (!partialProject.fields?.[measurement.name]) {
+      // @ts-expect-error Type not ready yet
+      partialProject.fields = {
+        ...partialProject.fields,
+        [measurement.name]: {
+          value: null,
+          manualAllowance: measurement.allowanceType === "manual" ? 0 : null,
+        },
+      };
+    }
   });
+  partialProject.slug = partialProject?.slug || slugify(partialProject.name, { lower: true });
+  const now = new Date();
+  partialProject.created = partialProject.created || now;
+  partialProject.updated = now;
+  return partialProject as Project;
 }
