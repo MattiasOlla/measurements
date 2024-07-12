@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    command: npm run dev
+    ports:
+      - 3000:3000
+    environment:
+      - FIRESTORE_EMULATOR_HOST=firestore:8200
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+  firestore:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:emulators
+    command: gcloud emulators firestore start --host-port=0.0.0.0:8200
+    ports:
+      - 8200:8200

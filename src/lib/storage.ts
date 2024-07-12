@@ -5,10 +5,11 @@ export const STORAGE_KEY = "projects";
 export type Project = {
   name: string;
   slug: string;
+  size: number;
   notes?: string;
-  created: string;
-  updated: string;
-  fields: unknown[];
+  created: Date;
+  updated: Date;
+  fields: { [key: string]: { value?: number; manualAllowance?: number } };
 };
 
 export function getProjects() {
@@ -27,7 +28,7 @@ export function saveProject(project: Optional<Project, "updated" | "fields">) {
   const updatedProject: Project = {
     ...project,
     updated: new Date().toISOString(),
-    fields: project.fields || [],
+    fields: project.fields || {},
   };
   localStorage.setItem(
     STORAGE_KEY,
@@ -40,6 +41,7 @@ export function createNewProject(name: string) {
   return saveProject({
     name: name,
     slug: slugify(name, { lower: true }),
+    size: 12,
     created: new Date().toISOString(),
   });
 }

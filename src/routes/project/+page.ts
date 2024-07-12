@@ -8,5 +8,5 @@ export const load: PageLoad = ({ url }) => {
   if (!project) {
     return { status: 404, error: new Error(`Project not found`) };
   }
-  return project;
+  return { project };
 };

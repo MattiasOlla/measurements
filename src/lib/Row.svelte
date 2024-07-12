@@ -1,10 +1,25 @@
 <script lang="ts">
   import { type Measurement, type Size } from "./measurements";
 
-  let { measurement, size }: { measurement: Measurement; size: Size } = $props();
+  type Props = {
+    measurement: Measurement;
+    size: Size;
+    // initialValue?: number;
+    // initialManualAllowance?: number;
+    value?: number;
+    manualAllowance?: number;
+    onUpdate: (value?: number, allowance?: number) => void;
+  };
+  let {
+    measurement,
+    size,
+    value = $bindable(),
+    manualAllowance = $bindable(0),
+    onUpdate,
+  }: Props = $props();
 
-  let value = $state<number | null>(null);
-  let manualAllowance = $state<number>(0);
+  // let value = $state<number | undefined>(initialValue);
+  // let manualAllowance = $state<number>(initialManualAllowance || 0);
 
   const allowance = $derived.by(() => {
     switch (measurement.allowanceType) {
@@ -16,6 +31,8 @@
         return parseFloat(measurement.allowance({ size }).toFixed(2));
     }
   });
+
+  $effect(() => onUpdate(value, manualAllowance || undefined));
 </script>
 
 <tr>
