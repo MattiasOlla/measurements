@@ -1,6 +1,6 @@
 import { goto } from "$app/navigation";
 import * as db from "$lib/db";
-import type { PageServerLoad } from "../$types";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const session = await locals.auth();
