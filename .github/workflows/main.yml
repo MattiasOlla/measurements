@@ -15,7 +15,7 @@ jobs:
           cache: npm
 
       - name: Install modules
-        run: npm ci --force
+        run: npm ci
 
       - name: Run ESLint
         run: npx eslint .
