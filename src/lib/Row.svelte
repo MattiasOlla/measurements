@@ -4,35 +4,21 @@
   type Props = {
     measurement: Measurement;
     size: Size;
-    // initialValue?: number;
-    // initialManualAllowance?: number;
-    value?: number;
-    manualAllowance?: number;
-    onUpdate: (value?: number, allowance?: number) => void;
+    value?: number | null;
+    manualAllowance?: number | null;
   };
-  let {
-    measurement,
-    size,
-    value = $bindable(),
-    manualAllowance = $bindable(0),
-    onUpdate,
-  }: Props = $props();
-
-  // let value = $state<number | undefined>(initialValue);
-  // let manualAllowance = $state<number>(initialManualAllowance || 0);
+  let { measurement, size, value = $bindable(), manualAllowance = $bindable() }: Props = $props();
 
   const allowance = $derived.by(() => {
     switch (measurement.allowanceType) {
       case "none":
         return 0;
       case "manual":
-        return manualAllowance;
+        return manualAllowance || 0;
       case "table":
         return parseFloat(measurement.allowance({ size }).toFixed(2));
     }
   });
-
-  $effect(() => onUpdate(value, manualAllowance || undefined));
 </script>
 
 <tr>

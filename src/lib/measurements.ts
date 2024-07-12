@@ -67,3 +67,5 @@ export const measurements = [
   { name: "Bystveck", allowanceType: "none" }, // TODO: implement this
   { name: "Ärmhål", allowanceType: "none" }, // TODO: implement this
 ] as const satisfies Measurement[];
+
+export type MeasurementName = (typeof measurements)[number]["name"];

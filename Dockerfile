@@ -4,11 +4,11 @@ FROM node:20-alpine AS builder
 ARG PORT
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --force
+RUN npm ci
 COPY . .
 ENV PORT=${PORT}
 RUN npm run build
-RUN npm prune --omit=dev --force
+RUN npm prune --omit=dev
 
 FROM node:20-alpine
 ARG PORT
