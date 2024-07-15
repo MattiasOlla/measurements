@@ -30,18 +30,19 @@
   $effect(() => save($state.snapshot(project)));
 </script>
 
-<section>
-  <h1>{project.name}</h1>
-  <label for="size">Storlek</label>
-  <select id="size" bind:value={project.size}>
-    {#each sizes as s}
-      <option value={s} selected={s === project.size}>{s}</option>
-    {/each}
-  </select>
+<section class="block">
+  <label class="label" for="size">Storlek</label>
+  <div class="select is-rounded">
+    <select id="size" bind:value={project.size}>
+      {#each sizes as s}
+        <option value={s} selected={s === project.size}>{s}</option>
+      {/each}
+    </select>
+  </div>
 </section>
 
 <section>
-  <table>
+  <table class="table">
     <thead>
       <tr>
         <th></th>

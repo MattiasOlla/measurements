@@ -23,10 +23,10 @@
 
 <tr>
   <td>{measurement.name}</td>
-  <td><input type="number" size="4" bind:value /> </td>
+  <td><input class="input is-small" type="number" size="4" bind:value /> </td>
   <td>
     {#if measurement.allowanceType === "manual"}
-      <input type="number" size="4" bind:value={manualAllowance} />
+      <input class="input is-small" type="number" size="4" bind:value={manualAllowance} />
     {:else if measurement.allowanceType === "table"}
       {allowance}
     {/if}
