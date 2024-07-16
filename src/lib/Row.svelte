@@ -1,4 +1,5 @@
 <script lang="ts">
+  import FloatingInput from "./FloatingInput.svelte";
   import { type Measurement, type Size } from "./measurements";
 
   type Props = {
@@ -22,13 +23,14 @@
 </script>
 
 <tr>
-  <td>{measurement.name}</td>
-  <td><input class="input is-small" type="number" size="4" bind:value /> </td>
+  <td>
+    <FloatingInput class="input" label={measurement.name} type="number" size={4} bind:value />
+  </td>
   <td>
     {#if measurement.allowanceType === "manual"}
-      <input class="input is-small" type="number" size="4" bind:value={manualAllowance} />
+      <input class="input" type="number" size="4" bind:value={manualAllowance} />
     {:else if measurement.allowanceType === "table"}
-      {allowance}
+      <span>{allowance}</span>
     {/if}
   </td>
   <td>{value && value + allowance}</td>
@@ -36,15 +38,7 @@
 </tr>
 
 <style>
-  /* Chrome, Safari, Edge, Opera */
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* Firefox */
-  input[type="number"] {
-    -moz-appearance: textfield;
+  td {
+    vertical-align: middle;
   }
 </style>

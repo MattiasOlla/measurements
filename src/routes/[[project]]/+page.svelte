@@ -30,7 +30,7 @@
   $effect(() => save($state.snapshot(project)));
 </script>
 
-<section class="block">
+<section class="section">
   <label class="label" for="size">Storlek</label>
   <div class="select is-rounded">
     <select id="size" bind:value={project.size}>
@@ -41,11 +41,10 @@
   </div>
 </section>
 
-<section>
+<section class="section">
   <table class="table">
     <thead>
       <tr>
-        <th></th>
         <th>Kroppsmått</th>
         <th>+/-</th>
         <th>Inkl. rörelsevidd</th>
