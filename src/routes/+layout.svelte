@@ -7,18 +7,33 @@
   let { children, data } = $props();
 
   const user = $derived($page?.data?.session?.user);
+
+  let burgerMenuOpen = $state(false);
 </script>
 
 <div class="app">
   <nav class="navbar" aria-label="main navigation">
     <div class="navbar-brand">
       <img src={logo} alt="tape measure" />
-      <div class="navbar-item">
-        <h1 class="title">{data?.activeProject?.name || "Namnlöst projekt"}</h1>
-      </div>
+
+      <button
+        class="navbar-burger"
+        class:is-active={burgerMenuOpen}
+        aria-label="menu"
+        aria-expanded="false"
+        data-target="navbar"
+        onclick={() => {
+          burgerMenuOpen = !burgerMenuOpen;
+        }}
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
     </div>
 
-    <div class="navbar-menu">
+    <div id="navbar" class="navbar-menu" class:is-active={burgerMenuOpen}>
       <div class="navbar-start">
         {#if user && data.projects}
           <div class="navbar-dropdown">

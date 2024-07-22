@@ -30,6 +30,8 @@
   $effect(() => save($state.snapshot(project)));
 </script>
 
+<h1 class="title">{data?.activeProject?.name || "Namnlöst projekt"}</h1>
+
 <section class="section">
   <label class="label" for="size">Storlek</label>
   <div class="select is-rounded">
