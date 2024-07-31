@@ -1,6 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { Firestore } from "@google-cloud/firestore";
-import type { Project } from "./storage";
+import type { Project } from "./projects";
 
 if (env.FIRESTORE_EMULATOR_HOST) {
   process.env.FIRESTORE_EMULATOR_HOST = env.FIRESTORE_EMULATOR_HOST;
@@ -25,13 +25,29 @@ export async function getUserProjects(userId: string) {
     .orderBy("updated")
     .get();
   ref.forEach((r) => {
-    projects.push(r.data() as Project);
+    projects.push(r.data());
   });
 
   return projects;
 }
 
+export async function getProjectBySlug(userId: string, slug: string) {
+  const query = await db
+    .collection(userCollection)
+    .doc(userId)
+    .collection(projectSubCollection)
+    .where("slug", "==", slug)
+    .withConverter(projectConverter)
+    .get();
+
+  if (query.empty) return null;
+  return query.docs[0].data();
+}
+
 export async function upsertProject(userId: string, project: Project) {
+  const existingProject = await getProjectBySlug(userId, project.slug);
+  if (existingProject && existingProject.id !== project.id) throw new Error("Duplicate slug");
+
   project.updated = new Date();
   await db
     .collection(userCollection)
