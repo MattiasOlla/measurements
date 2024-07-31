@@ -8,18 +8,20 @@
   let newTitle = $state("");
 </script>
 
-<h1 class="title">
-  {title}
-  {#if editable}
-    <button
-      onclick={() => {
-        dialog && dialog.showModal();
-      }}
-    >
-      <img src={edit} alt="Edit name" />
-    </button>
-  {/if}
-</h1>
+{#if title}
+  <h1 class="title">
+    {title}
+    {#if editable}
+      <button
+        onclick={() => {
+          dialog && dialog.showModal();
+        }}
+      >
+        <img src={edit} alt="Edit name" />
+      </button>
+    {/if}
+  </h1>
+{/if}
 
 <dialog bind:this={dialog}>
   <div class="modal is-active">

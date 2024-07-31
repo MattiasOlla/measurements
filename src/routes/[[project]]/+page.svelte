@@ -34,17 +34,21 @@
   <section class="px-2 py-1">
     <div class="columns">
       <div class="column is-two-thirds">
-        <EditableTitle
-          bind:title={project.name}
-          editable={!!$page?.data?.session?.user}
-          onUpdate={async (newTitle) => {
-            const updated = changeName(project, newTitle);
-            console.log(updated);
-            await saveProject(updated);
-            project = updated;
-            replaceState(`/${updated.slug}`, $page.state);
-          }}
-        />
+        {#if $page?.data?.session?.user}
+          <EditableTitle
+            bind:title={project.name}
+            editable={!!$page?.data?.session?.user}
+            onUpdate={async (newTitle) => {
+              const updated = changeName(project, newTitle);
+              console.log(updated);
+              await saveProject(updated);
+              project = updated;
+              replaceState(`/${updated.slug}`, $page.state);
+            }}
+          />
+        {:else}
+          <i>Logga in för att spara dina mått</i>
+        {/if}
       </div>
       <div class="column">
         <div class="is-pulled-right">
