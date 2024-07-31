@@ -38,7 +38,7 @@ export async function upsertProject(userId: string, project: Project) {
     .doc(userId)
     .collection(projectSubCollection)
     .withConverter(projectConverter)
-    .doc(project.slug)
+    .doc(project.id)
     .set(project, { merge: true });
   return project;
 }
