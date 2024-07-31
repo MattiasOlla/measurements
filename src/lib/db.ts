@@ -21,9 +21,13 @@ export async function getUserProjects(userId: string) {
     .collection(userCollection)
     .doc(userId)
     .collection(projectSubCollection)
-    .orderBy("updatedAt")
+    .withConverter(projectConverter)
+    .orderBy("updated")
     .get();
-  ref.forEach((r) => projects.push(r.data() as Project));
+  ref.forEach((r) => {
+    projects.push(r.data() as Project);
+  });
+
   return projects;
 }
 
@@ -33,7 +37,17 @@ export async function upsertProject(userId: string, project: Project) {
     .collection(userCollection)
     .doc(userId)
     .collection(projectSubCollection)
+    .withConverter(projectConverter)
     .doc(project.slug)
     .set(project, { merge: true });
   return project;
 }
+
+const projectConverter = {
+  toFirestore: (project: Project) => project,
+  // @ts-expect-error I don't think the Firebase types are actually right
+  fromFirestore: (snapshot) => {
+    const data = snapshot.data()!;
+    return { ...data, created: data.created.toDate(), updated: data.updated.toDate() } as Project;
+  },
+};

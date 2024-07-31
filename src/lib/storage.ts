@@ -39,3 +39,9 @@ export function assertProjectFields(
   partialProject.updated = now;
   return partialProject as Project;
 }
+
+export function changeName(project: Project, newName: string) {
+  project.name = newName;
+  project.slug = slugify(newName, { lower: true });
+  return project;
+}

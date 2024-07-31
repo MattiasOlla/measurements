@@ -1,38 +1,48 @@
 <script lang="ts">
+  import { replaceState } from "$app/navigation";
   import { page } from "$app/stores";
+  import EditableTitle from "$lib/EditableTitle.svelte";
   import Row from "$lib/Row.svelte";
   import { debounce } from "$lib/debounce.js";
   import { measurements, sizes, type Size } from "$lib/measurements.js";
-  import { assertProjectFields } from "$lib/storage";
+  import { assertProjectFields, changeName, type Project } from "$lib/storage";
 
   const { data } = $props();
-  const project = $state(
+  let project = $state(
     assertProjectFields(data.activeProject || { name: "Untitled", size: 12 as Size }),
   );
 
-  const save = debounce(async (proj) => {
-    if (!$page?.data?.session?.user) {
-      console.log("not logged in, not saving");
-      return;
-    }
-    console.log("saving", proj);
-
-    await fetch("/api/projects", {
+  const saveProject = async (project: Project) => {
+    return await fetch("/api/projects", {
       method: "PUT",
-      body: JSON.stringify(proj),
+      body: JSON.stringify(project),
       headers: { "content-type": "application/json" },
     })
       .then((resp) => resp.json())
-      .then((data) => console.log("Received response", data))
       .catch(console.error);
+  };
+
+  const autoSave = debounce(async (proj: Project) => {
+    if (!$page?.data?.session?.user || !data.activeProject) return;
+    await saveProject(proj);
   }, 1000);
 
-  $effect(() => save($state.snapshot(project)));
+  $effect(() => autoSave($state.snapshot(project)));
 </script>
 
-<h1 class="title">{data?.activeProject?.name || "Namnlöst projekt"}</h1>
+<section class="px-2 py-1">
+  <EditableTitle
+    bind:title={project.name}
+    editable={!!$page?.data?.session?.user}
+    onUpdate={async (newTitle) => {
+      const updated = changeName(project, newTitle);
+      console.log(updated);
+      await saveProject(updated);
+      project = updated;
+      replaceState(`/${updated.slug}`, $page.state);
+    }}
+  />
 
-<section class="section">
   <label class="label" for="size">Storlek</label>
   <div class="select is-rounded">
     <select id="size" bind:value={project.size}>
@@ -43,25 +53,23 @@
   </div>
 </section>
 
-<section class="section">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Kroppsmått</th>
-        <th>+/-</th>
-        <th>Inkl. rörelsevidd</th>
-        <th>Konstr. mått</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each measurements as measurement}
-        <Row
-          {measurement}
-          size={project.size}
-          bind:value={project.fields[measurement.name].value}
-          bind:manualAllowance={project.fields[measurement.name].manualAllowance}
-        />
-      {/each}
-    </tbody>
-  </table>
-</section>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Kroppsmått</th>
+      <th>+/-</th>
+      <th>Inkl. rörelsevidd</th>
+      <th>Konstr. mått</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each measurements as measurement}
+      <Row
+        {measurement}
+        size={project.size}
+        bind:value={project.fields[measurement.name].value}
+        bind:manualAllowance={project.fields[measurement.name].manualAllowance}
+      />
+    {/each}
+  </tbody>
+</table>
