@@ -5,22 +5,12 @@
   import Row from "$lib/Row.svelte";
   import { debounce } from "$lib/debounce.js";
   import { measurements, sizes, type Size } from "$lib/measurements.js";
-  import { assertProjectFields, changeName, type Project } from "$lib/projects.js";
+  import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
 
   const { data } = $props();
   let project = $state(
-    assertProjectFields(data.activeProject || { name: "Untitled", size: 12 as Size }),
+    assertProjectFields(data.activeProject || { name: "Nytt projekt", size: 12 as Size }),
   );
-
-  const saveProject = async (project: Project) => {
-    return await fetch("/api/projects", {
-      method: "PUT",
-      body: JSON.stringify(project),
-      headers: { "content-type": "application/json" },
-    })
-      .then((resp) => resp.json())
-      .catch(console.error);
-  };
 
   const autoSave = debounce(async (proj: Project) => {
     if (!$page?.data?.session?.user || !data.activeProject) return;

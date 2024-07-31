@@ -51,3 +51,12 @@ const projectConverter = {
     return { ...data, created: data.created.toDate(), updated: data.updated.toDate() } as Project;
   },
 };
+
+export async function deleteProject(userId: string, projectId: string) {
+  await db
+    .collection(userCollection)
+    .doc(userId)
+    .collection(projectSubCollection)
+    .doc(projectId)
+    .delete();
+}
