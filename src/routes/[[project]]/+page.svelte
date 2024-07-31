@@ -5,7 +5,7 @@
   import Row from "$lib/Row.svelte";
   import { debounce } from "$lib/debounce.js";
   import { measurements, sizes, type Size } from "$lib/measurements.js";
-  import { assertProjectFields, changeName, type Project } from "$lib/storage";
+  import { assertProjectFields, changeName, type Project } from "$lib/projects.js";
 
   const { data } = $props();
   let project = $state(
