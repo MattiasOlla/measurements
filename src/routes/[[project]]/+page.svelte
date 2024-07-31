@@ -30,46 +30,55 @@
   $effect(() => autoSave($state.snapshot(project)));
 </script>
 
-<section class="px-2 py-1">
-  <EditableTitle
-    bind:title={project.name}
-    editable={!!$page?.data?.session?.user}
-    onUpdate={async (newTitle) => {
-      const updated = changeName(project, newTitle);
-      console.log(updated);
-      await saveProject(updated);
-      project = updated;
-      replaceState(`/${updated.slug}`, $page.state);
-    }}
-  />
+<div>
+  <section class="px-2 py-1">
+    <div class="columns">
+      <div class="column is-two-thirds">
+        <EditableTitle
+          bind:title={project.name}
+          editable={!!$page?.data?.session?.user}
+          onUpdate={async (newTitle) => {
+            const updated = changeName(project, newTitle);
+            console.log(updated);
+            await saveProject(updated);
+            project = updated;
+            replaceState(`/${updated.slug}`, $page.state);
+          }}
+        />
+      </div>
+      <div class="column">
+        <div class="is-pulled-right">
+          <label class="label" for="size">Storlek</label>
+          <div class="select is-small">
+            <select id="size" bind:value={project.size}>
+              {#each sizes as s}
+                <option value={s} selected={s === project.size}>{s}</option>
+              {/each}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <label class="label" for="size">Storlek</label>
-  <div class="select is-rounded">
-    <select id="size" bind:value={project.size}>
-      {#each sizes as s}
-        <option value={s} selected={s === project.size}>{s}</option>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Kroppsmått</th>
+        <th>+/-</th>
+        <th>Inkl. rörelsevidd</th>
+        <th>Konstr. mått</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each measurements as measurement}
+        <Row
+          {measurement}
+          size={project.size}
+          bind:value={project.fields[measurement.name].value}
+          bind:manualAllowance={project.fields[measurement.name].manualAllowance}
+        />
       {/each}
-    </select>
-  </div>
-</section>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Kroppsmått</th>
-      <th>+/-</th>
-      <th>Inkl. rörelsevidd</th>
-      <th>Konstr. mått</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each measurements as measurement}
-      <Row
-        {measurement}
-        size={project.size}
-        bind:value={project.fields[measurement.name].value}
-        bind:manualAllowance={project.fields[measurement.name].manualAllowance}
-      />
-    {/each}
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>

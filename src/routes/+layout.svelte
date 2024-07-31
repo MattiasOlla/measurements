@@ -11,7 +11,7 @@
   let burgerMenuOpen = $state(false);
 </script>
 
-<div class="container is-widescreen">
+<div>
   <nav class="navbar" aria-label="main navigation">
     <div class="navbar-brand">
       <img src={logo} alt="tape measure" />
