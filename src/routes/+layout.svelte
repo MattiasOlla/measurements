@@ -25,6 +25,7 @@
     const proj = assertProjectFields({ name, size: 12 as Size });
     await saveProject(proj);
     goto(`/${proj.slug}`);
+    burgerMenuOpen = false;
   };
 </script>
 
