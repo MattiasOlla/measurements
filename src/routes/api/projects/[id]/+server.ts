@@ -22,7 +22,7 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
       updated: new Date(project.updated),
     });
     return json(updatedProject);
-  } catch (err) {
+  } catch {
     error(409, { message: `Project with slug ${project.slug} already exists` });
   }
 };

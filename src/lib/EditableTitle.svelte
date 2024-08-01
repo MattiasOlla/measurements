@@ -14,7 +14,7 @@
     {#if editable}
       <button
         onclick={() => {
-          dialog && dialog.showModal();
+          if (dialog) dialog.showModal();
         }}
       >
         <img src={edit} alt="Edit name" />

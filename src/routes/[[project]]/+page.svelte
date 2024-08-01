@@ -11,7 +11,9 @@
   let project = $state(
     assertProjectFields(data.activeProject || { name: "Nytt projekt", size: 12 as Size }),
   );
-  $effect(() => (project = data.activeProject));
+  $effect(() => {
+    if (data.activeProject) project = data.activeProject;
+  });
 
   const autoSave = debounce(async (proj: Project) => {
     if (!$page?.data?.session?.user || !data.activeProject) return;
