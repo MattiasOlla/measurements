@@ -1,14 +1,14 @@
 <script lang="ts">
   import FloatingInput from "./FloatingInput.svelte";
-  import { type Measurement, type Size } from "./measurements";
+  import { type Ease, type Measurement } from "./measurements";
 
   type Props = {
     measurement: Measurement;
-    size: Size;
+    ease: Ease;
     value?: number | null;
     manualAllowance?: number | null;
   };
-  let { measurement, size, value = $bindable(), manualAllowance = $bindable() }: Props = $props();
+  let { measurement, ease, value = $bindable(), manualAllowance = $bindable() }: Props = $props();
 
   const allowance = $derived.by(() => {
     switch (measurement.allowanceType) {
@@ -17,7 +17,7 @@
       case "manual":
         return manualAllowance || 0;
       case "table":
-        return parseFloat(measurement.allowance({ size }).toFixed(2));
+        return parseFloat(measurement.allowance({ ease }).toFixed(2));
     }
   });
 </script>

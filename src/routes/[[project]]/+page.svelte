@@ -4,12 +4,12 @@
   import EditableTitle from "$lib/EditableTitle.svelte";
   import Row from "$lib/Row.svelte";
   import { debounce } from "$lib/debounce.js";
-  import { measurements, sizes, type Size } from "$lib/measurements.js";
+  import { eases, measurements, type Ease } from "$lib/measurements.js";
   import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
 
   const { data } = $props();
   let project = $state(
-    assertProjectFields(data.activeProject || { name: "Nytt projekt", size: 12 as Size }),
+    assertProjectFields(data.activeProject || { name: "Nytt projekt", ease: 12 as Ease }),
   );
   $effect(() => {
     if (data.activeProject) project = data.activeProject;
@@ -43,11 +43,11 @@
       </div>
       <div class="column">
         <div class="is-pulled-right">
-          <label class="label" for="size">Storlek</label>
-          <div class="select is-small">
-            <select id="size" bind:value={project.size}>
-              {#each sizes as s}
-                <option value={s} selected={s === project.size}>{s}</option>
+          <label class="label" for="size">Rörelsevidd</label>
+          <div class="select is-small is-pulled-right">
+            <select id="size" bind:value={project.ease}>
+              {#each eases as s}
+                <option value={s} selected={s === project.ease}>{s}</option>
               {/each}
             </select>
           </div>
@@ -69,7 +69,7 @@
       {#each measurements as measurement}
         <Row
           {measurement}
-          size={project.size}
+          ease={project.ease}
           bind:value={project.fields[measurement.name].value}
           bind:manualAllowance={project.fields[measurement.name].manualAllowance}
         />

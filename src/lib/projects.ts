@@ -1,13 +1,13 @@
 import slugify from "slugify";
 import * as uuid from "uuid";
-import { measurements, type MeasurementName, type Size } from "./measurements";
+import { measurements, type Ease, type MeasurementName } from "./measurements";
 export const STORAGE_KEY = "projects";
 
 export type Project = {
   name: string;
   id: string;
   slug: string;
-  size: Size;
+  ease: Ease;
   notes?: string;
   created: Date;
   updated: Date;
