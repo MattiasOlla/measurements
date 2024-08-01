@@ -11,6 +11,7 @@
   let project = $state(
     assertProjectFields(data.activeProject || { name: "Nytt projekt", size: 12 as Size }),
   );
+  $effect(() => (project = data.activeProject));
 
   const autoSave = debounce(async (proj: Project) => {
     if (!$page?.data?.session?.user || !data.activeProject) return;
@@ -30,9 +31,7 @@
             editable={!!$page?.data?.session?.user}
             onUpdate={async (newTitle) => {
               const updated = changeName(project, newTitle);
-              console.log(updated);
               await saveProject(updated);
-              project = updated;
               replaceState(`/${updated.slug}`, $page.state);
             }}
           />
