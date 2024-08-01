@@ -6,24 +6,23 @@ type SizeArgs = {
   [key: string]: unknown;
 };
 
-export type Measurement =
+export type Measurement = { name: string; divideByTwo?: boolean } & (
   | {
-      name: string;
       allowanceType: "none" | "manual";
     }
   | {
-      name: string;
       allowanceType: "table";
       allowance: (args: SizeArgs) => number;
-    };
+    }
+);
 
 export const measurements = [
   { name: "Ärmhålsdjup", allowanceType: "table", allowance: ({ size }) => (size - 6) / 2 },
   { name: "Livlängd, bak", allowanceType: "none" },
   { name: "Klänningslängd", allowanceType: "none" },
-  { name: "Bystvidd", allowanceType: "table", allowance: ({ size }) => size },
-  { name: "Midjevidd", allowanceType: "manual" },
-  { name: "Höftvidd", allowanceType: "manual" },
+  { name: "Bystvidd", allowanceType: "table", allowance: ({ size }) => size, divideByTwo: true },
+  { name: "Midjevidd", allowanceType: "manual", divideByTwo: true },
+  { name: "Höftvidd", allowanceType: "manual", divideByTwo: true },
   { name: "Höftläge", allowanceType: "none" },
   {
     name: "Stussvidd",
@@ -33,13 +32,20 @@ export const measurements = [
       if (size === 4) return 3;
       return size - 2;
     },
+    divideByTwo: true,
   },
   { name: "Stussläge", allowanceType: "none" },
-  { name: "Ryggbredd", allowanceType: "table", allowance: ({ size }) => ((size - 2) / 2) * 0.6 },
+  {
+    name: "Ryggbredd",
+    allowanceType: "table",
+    allowance: ({ size }) => ((size - 2) / 2) * 0.6,
+    divideByTwo: true,
+  },
   {
     name: "Halsvidd",
     allowanceType: "table",
     allowance: ({ size }) => (size < 6 ? 0 : ((size - 6) / 2) * 0.75),
+    divideByTwo: true,
   },
   {
     name: "Axelbredd",
@@ -59,9 +65,10 @@ export const measurements = [
     name: "Överarmsvidd",
     allowanceType: "table",
     allowance: ({ size }) => (size - 2) / 2 + 3, // TODO: Handle "3 à 4" etc.
+    divideByTwo: true,
   },
-  { name: "Armbågdsvidd", allowanceType: "none" }, // TODO: implement this
-  { name: "Handledsvidd", allowanceType: "none" }, // TODO: implement this
+  { name: "Armbågdsvidd", allowanceType: "none", divideByTwo: true }, // TODO: implement this
+  { name: "Handledsvidd", allowanceType: "none", divideByTwo: true }, // TODO: implement this
   { name: "Bysthöjd", allowanceType: "none" }, // TODO: implement this
   { name: "Livlängd, fram", allowanceType: "none" }, // TODO: implement this
   { name: "Bystveck", allowanceType: "none" }, // TODO: implement this

@@ -34,7 +34,7 @@
     {/if}
   </td>
   <td>{value && value + allowance}</td>
-  <td>{value && (value + allowance) / 2}</td>
+  <td>{value && (measurement.divideByTwo ? (value + allowance) / 2 : value + allowance)}</td>
 </tr>
 
 <style>
