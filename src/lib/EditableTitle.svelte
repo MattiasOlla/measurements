@@ -28,14 +28,17 @@
     <div class="modal-content">
       <div class="box">
         <h4 class="title is-4">Byt namn</h4>
-        <input class="input" bind:value={newTitle} placeholder={title} />
-        <button
-          class="button mt-3"
-          onclick={async () => {
+        <form
+          onsubmit={async (event) => {
+            event.preventDefault();
             await onUpdate(newTitle);
             dialog.close();
-          }}>Spara</button
+            newTitle = "";
+          }}
         >
+          <input class="input" bind:value={newTitle} placeholder={title} />
+          <button class="button mt-3" type="submit">Spara</button>
+        </form>
       </div>
     </div>
     <form method="dialog">
