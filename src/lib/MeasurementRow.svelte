@@ -25,15 +25,16 @@
       case "manual":
         return manualAllowance || 0;
       case "table":
-        return toFixed(measurement.allowance({ ease }));
+        return measurement.allowance({ ease });
     }
   });
 
   $effect(() => {
     if (value) {
+      console.log({ name: measurement.name, value, allowance });
       outputs.base = value;
-      outputs.withEase = value + allowance;
-      outputs.withEaseHalved = outputs.withEase / 2;
+      outputs.withEase = toFixed(value + allowance);
+      outputs.withEaseHalved = toFixed(outputs.withEase / 2);
     }
   });
 </script>

@@ -8,6 +8,7 @@ export type Project = {
   id: string;
   slug: string;
   ease: Ease;
+  size: number;
   notes?: string;
   created: Date;
   updated: Date;

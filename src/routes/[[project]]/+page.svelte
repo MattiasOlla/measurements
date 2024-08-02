@@ -16,7 +16,7 @@
 
   const { data } = $props();
   let project = $state(
-    assertProjectFields(data.activeProject || { name: "Nytt projekt", ease: 12 as Ease }),
+    assertProjectFields(data.activeProject || { name: "Nytt projekt", ease: 12 as Ease, size: 25 }),
   );
   $effect(() => {
     if (data.activeProject) project = data.activeProject;
@@ -39,7 +39,7 @@
 <div>
   <section class="px-2 py-1">
     <div class="columns">
-      <div class="column is-two-thirds">
+      <div class="column is-half">
         {#if $page?.data?.session?.user}
           <EditableTitle
             bind:title={project.name}
@@ -54,11 +54,20 @@
           <i>Logga in för att spara dina mått</i>
         {/if}
       </div>
-      <div class="column">
+      <div class="column container">
+        <div class="is-pulled-right px-3">
+          <label class="label" for="size">Storlek</label>
+          <input
+            class="input is-small is-pulled-right"
+            type="number"
+            size="3"
+            bind:value={project.size}
+          />
+        </div>
         <div class="is-pulled-right">
-          <label class="label" for="size">Rörelsevidd</label>
+          <label class="label" for="ease">Rörelsevidd</label>
           <div class="select is-small is-pulled-right">
-            <select id="size" bind:value={project.ease}>
+            <select id="ease" bind:value={project.ease}>
               {#each eases as s}
                 <option value={s} selected={s === project.ease}>{s}</option>
               {/each}
@@ -89,7 +98,12 @@
         />
       {/each}
       {#each derivedMeasurements as derivedMeasurement}
-        <DerivedMeasurementRow {derivedMeasurement} ease={project.ease} {measurementOutputs} />
+        <DerivedMeasurementRow
+          {derivedMeasurement}
+          ease={project.ease}
+          size={project.size}
+          {measurementOutputs}
+        />
       {/each}
     </tbody>
   </table>

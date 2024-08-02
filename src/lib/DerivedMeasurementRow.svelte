@@ -6,13 +6,14 @@
   type Props = {
     derivedMeasurement: DerivedMeasurement;
     ease: Ease;
+    size: number;
     measurementOutputs: MeasurementOutputRecord;
   };
-  let { derivedMeasurement, ease, measurementOutputs }: Props = $props();
+  let { derivedMeasurement, ease, size, measurementOutputs }: Props = $props();
 
   // TODO size
   let allowance = $derived(
-    toFixed(derivedMeasurement.allowance({ ease, measurementOutputs, size: 25 })),
+    toFixed(derivedMeasurement.allowance({ ease, measurementOutputs, size })),
   );
 </script>
 
