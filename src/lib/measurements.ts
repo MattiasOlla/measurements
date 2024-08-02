@@ -85,3 +85,11 @@ export const measurements = [
 ] as const satisfies Measurement[];
 
 export type MeasurementName = (typeof measurements)[number]["name"];
+
+export type MeasurementOutput = {
+  base: number | null;
+  withEase: number | null;
+  withEaseHalved: number | null;
+};
+
+export type MeasurementOutputRecord = Record<MeasurementName, MeasurementOutput>;

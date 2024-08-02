@@ -1,12 +1,18 @@
 <script lang="ts">
   import { replaceState } from "$app/navigation";
   import { page } from "$app/stores";
+  import DerivedMeasurementRow from "$lib/DerivedMeasurementRow.svelte";
   import EditableTitle from "$lib/EditableTitle.svelte";
-  import Row from "$lib/Row.svelte";
+  import MeasurementRow from "$lib/MeasurementRow.svelte";
   import { debounce } from "$lib/debounce.js";
-  import { eases, measurements, type Ease, type MeasurementName } from "$lib/measurements.js";
+  import { derivedMeasurements } from "$lib/derived-measurements.js";
+  import {
+    eases,
+    measurements,
+    type Ease,
+    type MeasurementOutputRecord,
+  } from "$lib/measurements.js";
   import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
-  import type { ComponentProps } from "svelte";
 
   const { data } = $props();
   let project = $state(
@@ -16,10 +22,10 @@
     if (data.activeProject) project = data.activeProject;
   });
 
-  const values = $state(
+  const measurementOutputs = $state(
     Object.fromEntries(
       measurements.map(({ name }) => [name, { withEase: null, withEaseHalved: null }]),
-    ) as Record<MeasurementName, ComponentProps<Row>["results"]>,
+    ) as MeasurementOutputRecord,
   );
 
   const autoSave = debounce(async (proj: Project) => {
@@ -74,13 +80,16 @@
     </thead>
     <tbody>
       {#each measurements as measurement}
-        <Row
+        <MeasurementRow
           {measurement}
           ease={project.ease}
           bind:value={project.fields[measurement.name].value}
           bind:manualAllowance={project.fields[measurement.name].manualAllowance}
-          bind:results={values[measurement.name]}
+          bind:outputs={measurementOutputs[measurement.name]}
         />
+      {/each}
+      {#each derivedMeasurements as derivedMeasurement}
+        <DerivedMeasurementRow {derivedMeasurement} ease={project.ease} {measurementOutputs} />
       {/each}
     </tbody>
   </table>

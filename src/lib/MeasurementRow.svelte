@@ -1,23 +1,21 @@
 <script lang="ts">
   import FloatingInput from "./FloatingInput.svelte";
-  import { type Ease, type Measurement } from "./measurements";
+  import { type Ease, type Measurement, type MeasurementOutput } from "./measurements";
+  import { toFixed } from "./utils";
 
   type Props = {
     measurement: Measurement;
     ease: Ease;
     value?: number | null;
     manualAllowance?: number | null;
-    results: {
-      withEase: number | null;
-      withEaseHalved: number | null;
-    };
+    outputs: MeasurementOutput;
   };
   let {
     measurement,
     ease,
     value = $bindable(),
     manualAllowance = $bindable(),
-    results = $bindable(),
+    outputs = $bindable(),
   }: Props = $props();
 
   const allowance = $derived.by(() => {
@@ -27,14 +25,15 @@
       case "manual":
         return manualAllowance || 0;
       case "table":
-        return parseFloat(measurement.allowance({ ease }).toFixed(2));
+        return toFixed(measurement.allowance({ ease }));
     }
   });
 
   $effect(() => {
     if (value) {
-      results.withEase = value + allowance;
-      results.withEaseHalved = results.withEase / 2;
+      outputs.base = value;
+      outputs.withEase = value + allowance;
+      outputs.withEaseHalved = outputs.withEase / 2;
     }
   });
 </script>
@@ -50,8 +49,8 @@
       <span>{allowance}</span>
     {/if}
   </td>
-  <td>{results.withEase}</td>
-  <td>{measurement.divideByTwo ? results.withEaseHalved : results.withEase}</td>
+  <td>{outputs.withEase}</td>
+  <td>{measurement.divideByTwo ? outputs.withEaseHalved : outputs.withEase}</td>
 </tr>
 
 <style>
