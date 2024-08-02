@@ -4,8 +4,9 @@
   import EditableTitle from "$lib/EditableTitle.svelte";
   import Row from "$lib/Row.svelte";
   import { debounce } from "$lib/debounce.js";
-  import { eases, measurements, type Ease } from "$lib/measurements.js";
+  import { eases, measurements, type Ease, type MeasurementName } from "$lib/measurements.js";
   import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
+  import type { ComponentProps } from "svelte";
 
   const { data } = $props();
   let project = $state(
@@ -14,6 +15,12 @@
   $effect(() => {
     if (data.activeProject) project = data.activeProject;
   });
+
+  const values = $state(
+    Object.fromEntries(
+      measurements.map(({ name }) => [name, { withEase: null, withEaseHalved: null }]),
+    ) as Record<MeasurementName, ComponentProps<Row>["results"]>,
+  );
 
   const autoSave = debounce(async (proj: Project) => {
     if (!$page?.data?.session?.user || !data.activeProject) return;
@@ -72,6 +79,7 @@
           ease={project.ease}
           bind:value={project.fields[measurement.name].value}
           bind:manualAllowance={project.fields[measurement.name].manualAllowance}
+          bind:results={values[measurement.name]}
         />
       {/each}
     </tbody>

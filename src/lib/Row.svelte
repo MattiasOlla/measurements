@@ -7,8 +7,18 @@
     ease: Ease;
     value?: number | null;
     manualAllowance?: number | null;
+    results: {
+      withEase: number | null;
+      withEaseHalved: number | null;
+    };
   };
-  let { measurement, ease, value = $bindable(), manualAllowance = $bindable() }: Props = $props();
+  let {
+    measurement,
+    ease,
+    value = $bindable(),
+    manualAllowance = $bindable(),
+    results = $bindable(),
+  }: Props = $props();
 
   const allowance = $derived.by(() => {
     switch (measurement.allowanceType) {
@@ -18,6 +28,13 @@
         return manualAllowance || 0;
       case "table":
         return parseFloat(measurement.allowance({ ease }).toFixed(2));
+    }
+  });
+
+  $effect(() => {
+    if (value) {
+      results.withEase = value + allowance;
+      results.withEaseHalved = results.withEase / 2;
     }
   });
 </script>
@@ -33,8 +50,8 @@
       <span>{allowance}</span>
     {/if}
   </td>
-  <td>{value && value + allowance}</td>
-  <td>{value && (measurement.divideByTwo ? (value + allowance) / 2 : value + allowance)}</td>
+  <td>{results.withEase}</td>
+  <td>{measurement.divideByTwo ? results.withEaseHalved : results.withEase}</td>
 </tr>
 
 <style>
