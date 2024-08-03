@@ -1,12 +1,15 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
-  type Props = HTMLInputAttributes & { label: string };
+  type Props = Omit<HTMLInputAttributes, "type" | "value"> & {
+    value?: number | null;
+    label: string;
+  };
 
   let { label, value = $bindable(), ...props }: Props = $props();
 </script>
 
 <div class="input-wrapper">
-  <input bind:value placeholder={label} {...props} />
+  <input bind:value placeholder={label} type="number" {...props} />
   <label for={props.id}>{label}</label>
 </div>
 

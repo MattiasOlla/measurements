@@ -41,7 +41,7 @@
 
 <tr>
   <td>
-    <FloatingInput class="input" label={measurement.name} type="number" size={4} bind:value />
+    <FloatingInput class="input" label={measurement.name} size={4} bind:value />
   </td>
   <td>
     {#if measurement.allowanceType === "manual"}
