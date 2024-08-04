@@ -58,7 +58,7 @@
             <div class="navbar-link">Mina projekt</div>
 
             <div class="navbar-dropdown">
-              {#each data.projects || [] as project}
+              {#each data.projects || [] as project (project.id)}
                 <a class="navbar-item" href={`/${project.slug}`}>{project.name}</a>
               {/each}
               <hr class="navbar-divider" />

@@ -68,7 +68,7 @@
           <label class="label" for="ease">Rörelsevidd</label>
           <div class="select is-small is-pulled-right">
             <select id="ease" bind:value={project.ease}>
-              {#each eases as s}
+              {#each eases as s (s)}
                 <option value={s} selected={s === project.ease}>{s}</option>
               {/each}
             </select>
@@ -88,7 +88,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each measurements as measurement}
+      {#each measurements as measurement (measurement.name)}
         <MeasurementRow
           {measurement}
           ease={project.ease}
@@ -97,7 +97,7 @@
           bind:outputs={measurementOutputs[measurement.name]}
         />
       {/each}
-      {#each derivedMeasurements as derivedMeasurement}
+      {#each derivedMeasurements as derivedMeasurement (derivedMeasurement.name)}
         <DerivedMeasurementRow
           {derivedMeasurement}
           ease={project.ease}
