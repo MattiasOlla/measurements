@@ -31,7 +31,6 @@
 
   $effect(() => {
     if (value) {
-      console.log({ name: measurement.name, value, allowance });
       outputs.base = value;
       outputs.withEase = toFixed(value + allowance);
       outputs.withEaseHalved = toFixed(outputs.withEase / 2);
