@@ -50,6 +50,22 @@ export const derivedMeasurements = [
       return measurementOutputs["Halsvidd"].base / 5 - 0.5;
     },
   },
+  {
+    name: "Bakhals",
+    constructionMeasurement: ({ measurementOutputs }) => {
+      if (!measurementOutputs["Halsvidd"].withEase) return null;
+      const neckWidth = measurementOutputs["Halsvidd"].withEase / 5 - 1;
+      return neckWidth + 0.5;
+    },
+  },
+  {
+    name: "Framhals",
+    constructionMeasurement: ({ measurementOutputs }) => {
+      if (!measurementOutputs["Halsvidd"].withEase) return null;
+      const neckWidth = measurementOutputs["Halsvidd"].withEase / 5 - 1;
+      return measurementOutputs["Halsvidd"].withEase / 2 - (neckWidth + 0.5);
+    },
+  },
 ] as const satisfies DerivedMeasurement[];
 
 export type DerivedMeasurementName = (typeof derivedMeasurements)[number]["name"];
