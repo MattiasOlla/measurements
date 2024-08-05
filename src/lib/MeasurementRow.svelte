@@ -31,9 +31,15 @@
 
   $effect(() => {
     if (value) {
-      outputs.base = value;
-      outputs.withEase = toFixed(value + allowance);
-      outputs.withEaseHalved = toFixed(outputs.withEase / 2);
+      const withEase = toFixed(value + allowance);
+      const withEaseHalved = toFixed((value + allowance) / 2);
+      outputs = {
+        base: value,
+        allowance,
+        withEase,
+        withEaseHalved,
+        constructionMeasurement: measurement.divideByTwo ? withEaseHalved : withEase,
+      };
     }
   });
 </script>
@@ -50,7 +56,7 @@
     {/if}
   </td>
   <td>{outputs.withEase}</td>
-  <td>{measurement.divideByTwo ? outputs.withEaseHalved : outputs.withEase}</td>
+  <td>{outputs.constructionMeasurement}</td>
 </tr>
 
 <style>

@@ -87,9 +87,11 @@ export const measurements = [
 export type MeasurementName = (typeof measurements)[number]["name"];
 
 export type MeasurementOutput = {
-  base: number | null;
-  withEase: number | null;
-  withEaseHalved: number | null;
+  base?: number;
+  allowance?: number;
+  withEase?: number;
+  withEaseHalved?: number;
+  constructionMeasurement?: number;
 };
 
 export type MeasurementOutputRecord = Record<MeasurementName, MeasurementOutput>;

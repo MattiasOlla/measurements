@@ -1,6 +1,12 @@
 import slugify from "slugify";
 import * as uuid from "uuid";
-import { measurements, type Ease, type MeasurementName } from "./measurements";
+import type { DerivedMeasurementName, DerivedMeasurementOutput } from "./derived-measurements";
+import {
+  measurements,
+  type Ease,
+  type MeasurementName,
+  type MeasurementOutput,
+} from "./measurements";
 export const STORAGE_KEY = "projects";
 
 export type Project = {
@@ -13,6 +19,17 @@ export type Project = {
   created: Date;
   updated: Date;
   fields: Record<MeasurementName, { value: number | null; manualAllowance?: number }>;
+};
+
+export type ProjectWithComputedValues = Project & {
+  fields: (
+    | ({
+        name: MeasurementName;
+      } & MeasurementOutput)
+    | ({
+        name: DerivedMeasurementName;
+      } & DerivedMeasurementOutput)
+  )[];
 };
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;

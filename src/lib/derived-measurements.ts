@@ -8,13 +8,13 @@ type EaseArgs = {
 
 export type DerivedMeasurement = {
   name: string;
-  allowance: (args: EaseArgs) => number | null;
+  constructionMeasurement: (args: EaseArgs) => number | null;
 };
 
 export const derivedMeasurements = [
   {
     name: "Ärmhålsbredd",
-    allowance: ({ ease, measurementOutputs, size }) => {
+    constructionMeasurement: ({ ease, measurementOutputs, size }) => {
       if (!measurementOutputs["Bystvidd"].withEaseHalved) return null;
       // TODO Double check all of this
       let divideBy: number, easeExtra: number;
@@ -31,21 +31,21 @@ export const derivedMeasurements = [
   },
   {
     name: "Halsbredd",
-    allowance: ({ measurementOutputs }) => {
+    constructionMeasurement: ({ measurementOutputs }) => {
       if (!measurementOutputs["Halsvidd"].withEase) return null;
       return measurementOutputs["Halsvidd"].withEase / 5 - 1;
     },
   },
   {
     name: "Halsdjup",
-    allowance: ({ measurementOutputs }) => {
+    constructionMeasurement: ({ measurementOutputs }) => {
       if (!measurementOutputs["Halsvidd"].withEase) return null;
       return measurementOutputs["Halsvidd"].withEase / 5 + 0.5;
     },
   },
   {
     name: "Minskn. livl. fram",
-    allowance: ({ measurementOutputs }) => {
+    constructionMeasurement: ({ measurementOutputs }) => {
       if (!measurementOutputs["Halsvidd"].base) return null;
       return measurementOutputs["Halsvidd"].base / 5 - 0.5;
     },
@@ -57,3 +57,16 @@ export type DerivedMeasurementName = (typeof derivedMeasurements)[number]["name"
 function isBetweenInclusive(min: number, max: number) {
   return (value: number) => value >= min && value <= max;
 }
+
+export type DerivedMeasurementOutput = {
+  base?: never;
+  allowance?: never;
+  withEase?: never;
+  withEaseHalved?: never;
+  constructionMeasurement?: number;
+};
+
+export type DerivedMeasurementOutputRecord = Record<
+  DerivedMeasurementName,
+  DerivedMeasurementOutput
+>;

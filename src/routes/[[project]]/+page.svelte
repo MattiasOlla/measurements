@@ -5,7 +5,10 @@
   import EditableTitle from "$lib/EditableTitle.svelte";
   import MeasurementRow from "$lib/MeasurementRow.svelte";
   import { debounce } from "$lib/debounce.js";
-  import { derivedMeasurements } from "$lib/derived-measurements.js";
+  import {
+    derivedMeasurements,
+    type DerivedMeasurementOutputRecord,
+  } from "$lib/derived-measurements.js";
   import {
     eases,
     measurements,
@@ -13,6 +16,7 @@
     type MeasurementOutputRecord,
   } from "$lib/measurements.js";
   import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
+  import { downloadResponse } from "$lib/utils.js";
 
   const { data } = $props();
   let project = $state(
@@ -23,9 +27,13 @@
   });
 
   const measurementOutputs = $state(
+    Object.fromEntries(measurements.map(({ name }) => [name, {}])) as MeasurementOutputRecord,
+  );
+
+  const derivedMeasurementOutputs = $state(
     Object.fromEntries(
-      measurements.map(({ name }) => [name, { withEase: null, withEaseHalved: null }]),
-    ) as MeasurementOutputRecord,
+      derivedMeasurements.map(({ name }) => [name, {}]),
+    ) as DerivedMeasurementOutputRecord,
   );
 
   const autoSave = debounce(async (proj: Project) => {
@@ -34,6 +42,25 @@
   }, 1000);
 
   $effect(() => autoSave($state.snapshot(project)));
+
+  async function downloadPDF() {
+    const fullProject = {
+      ...project,
+      fields: [
+        ...Object.entries(measurementOutputs).map(([name, values]) => ({ name, ...values })),
+        ...Object.entries(derivedMeasurementOutputs).map(([name, values]) => ({ name, ...values })),
+      ],
+    };
+
+    const response = await fetch("/api/pdf", {
+      method: "POST",
+      body: JSON.stringify(fullProject),
+      headers: { "content-type": "application/json" },
+    })
+      .then((res) => res.blob())
+      .catch(console.error);
+    if (response) downloadResponse(response, "application/pdf", `${project.name}.pdf`);
+  }
 </script>
 
 <div>
@@ -103,8 +130,10 @@
           ease={project.ease}
           size={project.size}
           {measurementOutputs}
+          bind:outputs={derivedMeasurementOutputs[derivedMeasurement.name]}
         />
       {/each}
     </tbody>
   </table>
+  <button class="button my-2 is-pulled-right" onclick={downloadPDF}>Exportera som PDF</button>
 </div>
