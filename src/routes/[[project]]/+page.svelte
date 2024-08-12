@@ -9,19 +9,12 @@
     derivedMeasurements,
     type DerivedMeasurementOutputRecord,
   } from "$lib/derived-measurements.js";
-  import {
-    eases,
-    measurements,
-    type Ease,
-    type MeasurementOutputRecord,
-  } from "$lib/measurements.js";
+  import { eases, measurements, type MeasurementOutputRecord } from "$lib/measurements.js";
   import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
   import { downloadResponse } from "$lib/utils.js";
 
   const { data } = $props();
-  let project = $state(
-    assertProjectFields(data.activeProject || { name: "Nytt projekt", ease: 12 as Ease, size: 25 }),
-  );
+  let project = $state(assertProjectFields(data.activeProject || { name: "Nytt projekt" }));
   $effect(() => {
     if (data.activeProject) project = data.activeProject;
   });

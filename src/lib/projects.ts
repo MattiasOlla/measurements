@@ -35,7 +35,10 @@ export type ProjectWithComputedValues = Project & {
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 export function assertProjectFields(
-  partialProject: Optional<Project, "id" | "slug" | "created" | "updated" | "fields">,
+  partialProject: Optional<
+    Project,
+    "id" | "slug" | "created" | "updated" | "fields" | "ease" | "size"
+  >,
 ) {
   // @ts-expect-error Type not ready yet
   partialProject.fields = partialProject.fields || {};
@@ -57,6 +60,8 @@ export function assertProjectFields(
   const now = new Date();
   partialProject.created = partialProject.created || now;
   partialProject.updated = now;
+  partialProject.size = partialProject.size || 25;
+  partialProject.ease = partialProject.ease || 12;
   return partialProject as Project;
 }
 

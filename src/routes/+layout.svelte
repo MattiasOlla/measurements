@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import logo from "$lib/images/tapemeasure.png";
-  import type { Ease } from "$lib/measurements";
   import { assertProjectFields, saveProject } from "$lib/projects.js";
   import { signIn, signOut } from "@auth/sveltekit/client";
   import "../app.css";
@@ -22,7 +21,7 @@
       newProjectNum++;
     } while (existingProjectNames.has(name));
 
-    const proj = assertProjectFields({ name, ease: 12 as Ease });
+    const proj = assertProjectFields({ name });
     await saveProject(proj);
     goto(`/${proj.slug}`);
     burgerMenuOpen = false;
