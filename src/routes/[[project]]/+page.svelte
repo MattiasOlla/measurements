@@ -2,7 +2,7 @@
   import { replaceState } from "$app/navigation";
   import { page } from "$app/stores";
   import DerivedMeasurementRow from "$lib/DerivedMeasurementRow.svelte";
-  import EditableTitle from "$lib/EditableTitle.svelte";
+  import EditTitle from "$lib/EditTitle.svelte";
   import MeasurementRow from "$lib/MeasurementRow.svelte";
   import { debounce } from "$lib/debounce.js";
   import {
@@ -11,6 +11,7 @@
   } from "$lib/derived-measurements.js";
   import { eases, measurements, type MeasurementOutputRecord } from "$lib/measurements.js";
   import { assertProjectFields, changeName, saveProject, type Project } from "$lib/projects.js";
+  import { globalState } from "$lib/state.svelte.js";
   import { downloadResponse } from "$lib/utils.js";
 
   const { data } = $props();
@@ -54,46 +55,46 @@
       .catch(console.error);
     if (response) downloadResponse(response, "application/pdf", `${project.name}.pdf`);
   }
+
+  $effect(() => {
+    globalState.pageTitle = project.name;
+  });
 </script>
 
 <div>
   <section class="px-2 py-1">
-    <div class="columns">
-      <div class="column is-half">
-        {#if $page?.data?.session?.user}
-          <EditableTitle
-            bind:title={project.name}
-            editable={!!$page?.data?.session?.user}
-            onUpdate={async (newTitle) => {
-              const updated = changeName(project, newTitle);
-              await saveProject(updated);
-              replaceState(`/${updated.slug}`, $page.state);
-            }}
-          />
-        {:else}
-          <i>Logga in för att spara dina mått</i>
-        {/if}
-      </div>
-      <div class="column container">
-        <div class="is-pulled-right px-3">
-          <label class="label" for="size">Storlek</label>
-          <input
-            class="input is-small is-pulled-right"
-            type="number"
-            size="3"
-            bind:value={project.size}
-          />
-        </div>
-        <div class="is-pulled-right">
-          <label class="label" for="ease">Rörelsevidd</label>
-          <div class="select is-small is-pulled-right">
-            <select id="ease" bind:value={project.ease}>
-              {#each eases as s (s)}
-                <option value={s} selected={s === project.ease}>{s}</option>
-              {/each}
-            </select>
-          </div>
-        </div>
+    <div class="is-pulled-right">
+      {#if $page?.data?.session?.user}
+        <EditTitle
+          text="Byt namn"
+          bind:title={project.name}
+          onUpdate={async (newTitle) => {
+            const updated = changeName(project, newTitle);
+            await saveProject(updated);
+            replaceState(`/${updated.slug}`, $page.state);
+          }}
+        />
+      {:else}
+        <i>Logga in för att spara dina mått</i>
+      {/if}
+    </div>
+    <div class="is-pulled-right px-3">
+      <label class="label" for="size">Storlek</label>
+      <input
+        class="input is-small is-pulled-right"
+        type="number"
+        size="3"
+        bind:value={project.size}
+      />
+    </div>
+    <div class="is-pulled-right">
+      <label class="label" for="ease">Rörelsevidd</label>
+      <div class="select is-small is-pulled-right">
+        <select id="ease" bind:value={project.ease}>
+          {#each eases as s (s)}
+            <option value={s} selected={s === project.ease}>{s}</option>
+          {/each}
+        </select>
       </div>
     </div>
   </section>

@@ -1,27 +1,20 @@
 <script lang="ts">
-  import edit from "$lib/images/edit.svg";
-  type Props = { title: string; editable: boolean; onUpdate: (title: string) => Promise<void> };
+  type Props = { title: string; text: string; onUpdate: (title: string) => Promise<void> };
 
-  let { title = $bindable(), editable, onUpdate }: Props = $props();
+  let { title = $bindable(), text, onUpdate }: Props = $props();
 
   let dialog: HTMLDialogElement;
   let newTitle = $state("");
 </script>
 
-{#if title}
-  <h1 class="title">
-    {title}
-    {#if editable}
-      <button
-        onclick={() => {
-          if (dialog) dialog.showModal();
-        }}
-      >
-        <img src={edit} alt="Edit name" />
-      </button>
-    {/if}
-  </h1>
-{/if}
+<button
+  class="button is-small m-1"
+  onclick={() => {
+    dialog.showModal();
+  }}
+>
+  {text}
+</button>
 
 <dialog bind:this={dialog}>
   <div class="modal is-active">

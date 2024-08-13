@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
+  import { beforeNavigate, goto } from "$app/navigation";
   import { page } from "$app/stores";
   import logo from "$lib/images/tapemeasure.png";
   import { assertProjectFields, saveProject } from "$lib/projects.js";
+  import { globalState } from "$lib/state.svelte";
   import { signIn, signOut } from "@auth/sveltekit/client";
   import "../app.css";
 
@@ -26,12 +27,19 @@
     goto(`/${proj.slug}`);
     burgerMenuOpen = false;
   };
+
+  beforeNavigate(() => {
+    globalState.pageTitle = "";
+  });
 </script>
 
 <div>
   <nav class="navbar" aria-label="main navigation">
     <div class="navbar-brand">
       <img src={logo} alt="tape measure" />
+      {#if globalState.pageTitle}
+        <h1 class="title m-1">{globalState.pageTitle}</h1>
+      {/if}
 
       <button
         class="navbar-burger"
@@ -97,3 +105,10 @@
     {@render children()}
   </main>
 </div>
+
+<style>
+  h1 {
+    align-items: center;
+    margin: 0.2em;
+  }
+</style>
