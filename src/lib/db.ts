@@ -22,7 +22,7 @@ export async function getUserProjects(userId: string) {
     .doc(userId)
     .collection(projectSubCollection)
     .withConverter(projectConverter)
-    .orderBy("updated")
+    .orderBy("updated", "desc")
     .get();
   ref.forEach((r) => {
     projects.push(r.data());
