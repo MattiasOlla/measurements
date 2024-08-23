@@ -1,4 +1,7 @@
-@import "bulma/css/bulma.css";
+:root {
+  --pico-form-element-spacing-vertical: 0.5rem;
+  --pico-form-element-spacing-horizontal: 0.5rem;
+}
 
 body {
   display: flex;

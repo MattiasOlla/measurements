@@ -2,8 +2,8 @@
   import { replaceState } from "$app/navigation";
   import { page } from "$app/stores";
   import DerivedMeasurementRow from "$lib/DerivedMeasurementRow.svelte";
-  import EditTitle from "$lib/EditTitle.svelte";
   import MeasurementRow from "$lib/MeasurementRow.svelte";
+  import EditModal from "$lib/components/EditModal.svelte";
   import { debounce } from "$lib/debounce.js";
   import {
     derivedMeasurements,
@@ -16,6 +16,9 @@
 
   const { data } = $props();
   let project = $state(assertProjectFields(data.activeProject || { name: "Nytt projekt" }));
+
+  let changeNameModal: EditModal;
+
   $effect(() => {
     if (data.activeProject) project = data.activeProject;
   });
@@ -62,72 +65,102 @@
 </script>
 
 <div>
-  <section class="px-2 py-1">
-    <div class="is-pulled-right">
-      {#if $page?.data?.session?.user}
-        <EditTitle
-          text="Byt namn"
-          bind:title={project.name}
-          onUpdate={async (newTitle) => {
-            const updated = changeName(project, newTitle);
-            await saveProject(updated);
-            replaceState(`/${updated.slug}`, $page.state);
-          }}
-        />
-      {:else}
-        <i>Logga in för att spara dina mått</i>
-      {/if}
+  <section class="options">
+    <div>
+      <label for="ease">Rörelsevidd</label>
+      <select id="ease" bind:value={project.ease}>
+        {#each eases as s (s)}
+          <option value={s} selected={s === project.ease}>{s}</option>
+        {/each}
+      </select>
     </div>
-    <div class="is-pulled-right px-3">
-      <label class="label" for="size">Storlek</label>
-      <input
-        class="input is-small is-pulled-right"
-        type="number"
-        size="3"
-        bind:value={project.size}
-      />
+    <div>
+      <label for="size">Storlek</label>
+      <input id="size" type="number" size="3" bind:value={project.size} />
     </div>
-    <div class="is-pulled-right">
-      <label class="label" for="ease">Rörelsevidd</label>
-      <div class="select is-small is-pulled-right">
-        <select id="ease" bind:value={project.ease}>
-          {#each eases as s (s)}
-            <option value={s} selected={s === project.ease}>{s}</option>
-          {/each}
-        </select>
-      </div>
-    </div>
+    {#if $page?.data?.session?.user}
+      <details class="dropdown">
+        <summary>Mer</summary>
+        <ul>
+          <li>
+            <!-- svelte-ignore a11y_invalid_attribute -->
+            <a href="javascript:void(0)" onclick={() => changeNameModal.open()}>Byt namn</a>
+          </li>
+        </ul>
+      </details>
+    {/if}
   </section>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Kroppsmått</th>
-        <th>+/-</th>
-        <th>Inkl. rörelsevidd</th>
-        <th>Konstr. mått</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each measurements as measurement (measurement.name)}
-        <MeasurementRow
-          {measurement}
-          ease={project.ease}
-          bind:value={project.fields[measurement.name].value}
-          bind:manualAllowance={project.fields[measurement.name].manualAllowance}
-          bind:outputs={measurementOutputs[measurement.name]}
-        />
-      {/each}
-      {#each derivedMeasurements as derivedMeasurement (derivedMeasurement.name)}
-        <DerivedMeasurementRow
-          {derivedMeasurement}
-          ease={project.ease}
-          size={project.size}
-          {measurementOutputs}
-          bind:outputs={derivedMeasurementOutputs[derivedMeasurement.name]}
-        />
-      {/each}
-    </tbody>
-  </table>
-  <button class="button my-2 is-pulled-right" onclick={downloadPDF}>Exportera som PDF</button>
+  <section>
+    <table>
+      <thead>
+        <tr>
+          <th>Kroppsmått</th>
+          <th>+/-</th>
+          <th>Inkl. rörelsevidd</th>
+          <th>Konstr. mått</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each measurements as measurement (measurement.name)}
+          <MeasurementRow
+            {measurement}
+            ease={project.ease}
+            bind:value={project.fields[measurement.name].value}
+            bind:manualAllowance={project.fields[measurement.name].manualAllowance}
+            bind:outputs={measurementOutputs[measurement.name]}
+          />
+        {/each}
+        {#each derivedMeasurements as derivedMeasurement (derivedMeasurement.name)}
+          <DerivedMeasurementRow
+            {derivedMeasurement}
+            ease={project.ease}
+            size={project.size}
+            {measurementOutputs}
+            bind:outputs={derivedMeasurementOutputs[derivedMeasurement.name]}
+          />
+        {/each}
+      </tbody>
+    </table>
+  </section>
+  <section class="options"><button onclick={downloadPDF}>Exportera som PDF</button></section>
 </div>
+
+<EditModal
+  initialValue={project.name}
+  label="Byt namn"
+  bind:this={changeNameModal}
+  onUpdate={async (newName) => {
+    const updated = changeName(project, newName);
+    await saveProject(updated);
+    replaceState(`/${updated.slug}`, $page.state);
+  }}
+/>
+
+<style>
+  .options {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1em;
+    align-items: flex-end;
+  }
+
+  .options label {
+    font-size: 14px;
+  }
+
+  details.dropdown summary + ul {
+    left: unset;
+    right: 0;
+  }
+
+  table {
+    display: block;
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+    margin: 0 auto;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+</style>

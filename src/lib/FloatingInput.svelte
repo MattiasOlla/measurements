@@ -24,6 +24,9 @@
   input {
     display: inline;
     width: 100%;
+    margin: 0;
+    padding: 0.5rem;
+    height: 2.5rem;
   }
 
   input::placeholder {
@@ -39,7 +42,7 @@
   input:focus + label,
   input:not(:placeholder-shown) + label {
     /* Move the label above the button and scale it down */
-    transform: translateY(-75%) scale(0.75);
+    transform: translateY(-85%) scale(0.75);
   }
 
   label {
@@ -52,6 +55,7 @@
     opacity: 0.95;
     padding: 0 4px;
     border-radius: 4px;
-    background-color: var(--bulma-body-background-color);
+    background-color: var(--pico-background-color);
+    margin: 0;
   }
 </style>

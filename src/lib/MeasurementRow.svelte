@@ -46,11 +46,11 @@
 
 <tr>
   <td>
-    <FloatingInput class="input" label={measurement.name} size={4} bind:value />
+    <FloatingInput label={measurement.name} size={4} bind:value />
   </td>
   <td>
     {#if measurement.allowanceType === "manual"}
-      <input class="input" type="number" size="4" bind:value={manualAllowance} />
+      <input type="number" size="2" bind:value={manualAllowance} />
     {:else if measurement.allowanceType === "table"}
       <span>{allowance}</span>
     {/if}
@@ -62,5 +62,13 @@
 <style>
   td {
     vertical-align: middle;
+    padding: 0.5rem;
+  }
+
+  input {
+    display: inline;
+    width: 100%;
+    margin: 0;
+    height: 2.5rem;
   }
 </style>

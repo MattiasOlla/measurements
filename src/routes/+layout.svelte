@@ -1,105 +1,46 @@
 <script lang="ts">
-  import { beforeNavigate, goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { navigating, page } from "$app/stores";
+  import Menu from "$lib/components/Menu.svelte";
   import logo from "$lib/images/tapemeasure.png";
-  import { assertProjectFields, saveProject } from "$lib/projects.js";
   import { globalState } from "$lib/state.svelte";
-  import { signIn, signOut } from "@auth/sveltekit/client";
+  import "@picocss/pico/css/pico.min.css";
+  import { Hamburger } from "svelte-hamburgers";
   import "../app.css";
 
-  let { children, data } = $props();
+  let { children } = $props();
 
   const user = $derived($page?.data?.session?.user);
 
   let burgerMenuOpen = $state(false);
 
-  const newProject = async () => {
-    const existingProjectNames = new Set((data.projects || []).map(({ name }) => name));
-    let name: string;
-    let newProjectNum = 0;
-    do {
-      name = newProjectNum ? `Nytt projekt ${newProjectNum}` : "Nytt projekt";
-      newProjectNum++;
-    } while (existingProjectNames.has(name));
-
-    const proj = assertProjectFields({ name });
-    await saveProject(proj);
-    goto(`/${proj.slug}`);
-    burgerMenuOpen = false;
-  };
-
-  beforeNavigate(() => {
-    globalState.pageTitle = "";
+  $effect(() => {
+    if ($navigating) burgerMenuOpen = false;
   });
 </script>
 
-<div>
-  <nav class="navbar" aria-label="main navigation">
-    <div class="navbar-brand">
-      <img src={logo} alt="tape measure" />
+<div class="container">
+  <nav aria-label="main navigation">
+    <ul>
+      <li><img src={logo} alt="tape measure" /></li>
       {#if globalState.pageTitle}
-        <h1 class="title m-1">{globalState.pageTitle}</h1>
+        <li>
+          <h1>{globalState.pageTitle}</h1>
+        </li>
       {/if}
+    </ul>
 
-      <button
-        class="navbar-burger"
-        class:is-active={burgerMenuOpen}
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbar"
-        onclick={() => {
-          burgerMenuOpen = !burgerMenuOpen;
-        }}
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </button>
-    </div>
-
-    <div id="navbar" class="navbar-menu" class:is-active={burgerMenuOpen}>
-      <div class="navbar-start">
-        {#if user}
-          <div class="navbar-item has-dropdown is-hoverable">
-            <div class="navbar-link">Mina projekt</div>
-
-            <div class="navbar-dropdown">
-              {#each data.projects || [] as project (project.id)}
-                <a class="navbar-item" href={`/${project.slug}`}>{project.name}</a>
-              {/each}
-              <hr class="navbar-divider" />
-              <div class="navbar-item">
-                <button class="button is-small" onclick={newProject}>Nytt projekt</button>
-              </div>
-            </div>
-          </div>
-        {/if}
-      </div>
-      <div class="navbar-end">
-        {#if user}
-          <div class="navbar-item has-dropdown is-hoverable">
-            <strong class="navbar-item">{user?.givenName ?? user?.givenName ?? "User"}</strong>
-            {#if user?.image}
-              <div class="navbar-item avatar">
-                <img src={user.image} class="avatar" alt="User Avatar" />
-              </div>
-            {/if}
-
-            <div class="navbar-dropdown">
-              <div class="navbar-item">
-                <button class="button" onclick={() => signOut()}>Logga ut</button>
-              </div>
-            </div>
-          </div>
-        {:else}
-          <div class="navbar-item">
-            <button class="button" onclick={() => signIn("google")}>Logga in</button>
-          </div>
-        {/if}
-      </div>
-    </div>
+    <ul>
+      <li>
+        <Hamburger bind:open={burgerMenuOpen} />
+      </li>
+    </ul>
   </nav>
+
+  <Menu
+    bind:open={burgerMenuOpen}
+    userName={user?.givenName ?? user?.givenName}
+    avatarUrl={user?.image}
+  />
 
   <main>
     {@render children()}
