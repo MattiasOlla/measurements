@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { type Ease, type Measurement, type MeasurementOutput } from "../measurements";
+  import { toFixed } from "../utils";
   import FloatingInput from "./FloatingInput.svelte";
-  import { type Ease, type Measurement, type MeasurementOutput } from "./measurements";
-  import { toFixed } from "./utils";
 
   type Props = {
     measurement: Measurement;

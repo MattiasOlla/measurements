@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { DerivedMeasurement, DerivedMeasurementOutput } from "./derived-measurements";
-  import { type Ease, type MeasurementOutputRecord } from "./measurements";
-  import { toFixed } from "./utils";
+  import type { DerivedMeasurement, DerivedMeasurementOutput } from "../derived-measurements";
+  import { type Ease, type MeasurementOutputRecord } from "../measurements";
+  import { toFixed } from "../utils";
 
   type Props = {
     derivedMeasurement: DerivedMeasurement;

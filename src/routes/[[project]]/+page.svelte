@@ -1,9 +1,9 @@
 <script lang="ts">
   import { replaceState } from "$app/navigation";
   import { page } from "$app/stores";
-  import DerivedMeasurementRow from "$lib/DerivedMeasurementRow.svelte";
-  import MeasurementRow from "$lib/MeasurementRow.svelte";
+  import DerivedMeasurementRow from "$lib/components/DerivedMeasurementRow.svelte";
   import EditModal from "$lib/components/EditModal.svelte";
+  import MeasurementRow from "$lib/components/MeasurementRow.svelte";
   import { debounce } from "$lib/debounce.js";
   import {
     derivedMeasurements,
