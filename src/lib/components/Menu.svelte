@@ -42,7 +42,6 @@
         <button onclick={() => signIn("google")}>Logga in</button>
       {/if}
     </div>
-    <hr />
   </div>
 {/if}
 
@@ -50,8 +49,9 @@
   .menu {
     text-align: center;
     font-size: 1.5em;
-    padding: 1em;
+    margin: 1em;
     padding-top: 0;
+    border-bottom: 2px solid var(--pico-muted-border-color);
   }
 
   .menu-item {
