@@ -3,6 +3,7 @@
   import Menu from "$lib/components/Menu.svelte";
   import logo from "$lib/images/tapemeasure.png";
   import { globalState } from "$lib/state.svelte";
+  import { signIn } from "@auth/sveltekit/client";
   import "@picocss/pico/css/pico.min.css";
   import { Hamburger } from "svelte-hamburgers";
   import "../app.css";
@@ -22,11 +23,13 @@
   <nav aria-label="main navigation">
     <ul>
       <li><img src={logo} alt="tape measure" /></li>
-      {#if globalState.pageTitle}
-        <li>
+      <li>
+        {#if globalState.pageTitle}
           <h1>{globalState.pageTitle}</h1>
-        </li>
-      {/if}
+        {:else}
+          <em><button onclick={() => signIn("google")}>Logga in</button> för att spara dina mått</em>
+        {/if}
+      </li>
     </ul>
 
     <ul>
@@ -62,5 +65,9 @@
   img {
     max-height: 38px;
     max-width: 38px;
+  }
+
+  em button {
+    padding: 0 0.3em;
   }
 </style>

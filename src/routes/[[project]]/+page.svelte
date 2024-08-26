@@ -15,7 +15,7 @@
   import { downloadResponse } from "$lib/utils.js";
 
   const { data } = $props();
-  let project = $state(assertProjectFields(data.activeProject || { name: "Nytt projekt" }));
+  let project = $state(assertProjectFields(data.activeProject || { name: "" }));
 
   let changeNameModal: EditModal;
 
