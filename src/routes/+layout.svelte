@@ -58,6 +58,7 @@
   h1 {
     align-items: center;
     margin: 0.2em;
+    max-width: 40vw;
   }
 
   img {
