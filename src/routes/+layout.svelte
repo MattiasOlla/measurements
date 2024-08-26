@@ -30,6 +30,9 @@
     </ul>
 
     <ul>
+      {#if user?.image}
+        <li><img src={user.image} alt="User avatar" /></li>
+      {/if}
       <li>
         <Hamburger bind:open={burgerMenuOpen} />
       </li>
@@ -51,5 +54,13 @@
   h1 {
     align-items: center;
     margin: 0.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  img {
+    max-height: 38px;
+    max-width: 38px;
   }
 </style>
