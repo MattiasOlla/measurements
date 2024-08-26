@@ -27,7 +27,8 @@
         {#if globalState.pageTitle}
           <h1>{globalState.pageTitle}</h1>
         {:else}
-          <em><button onclick={() => signIn("google")}>Logga in</button> för att spara dina mått</em>
+          <em><button onclick={() => signIn("google")}>Logga in</button> för att spara dina mått</em
+          >
         {/if}
       </li>
     </ul>
@@ -57,9 +58,6 @@
   h1 {
     align-items: center;
     margin: 0.2em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   img {
