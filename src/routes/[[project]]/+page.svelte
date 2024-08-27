@@ -15,7 +15,8 @@
   import { downloadResponse } from "$lib/utils.js";
 
   const { data } = $props();
-  let project = $state(assertProjectFields(data.activeProject || { name: "" }));
+  let project = $state(assertProjectFields(data.activeProject || { name: "Namnlöst" }));
+  const user = $derived($page?.data?.session?.user);
 
   let changeNameModal: EditModal;
 
@@ -60,7 +61,7 @@
   }
 
   $effect(() => {
-    globalState.pageTitle = project.name;
+    globalState.pageTitle = user ? project.name : "";
   });
 </script>
 
