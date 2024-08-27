@@ -69,7 +69,10 @@ export const measurements = [
   {
     name: "Överarmsvidd",
     allowanceType: "table",
-    allowance: ({ ease }) => (ease - 2) / 2 + 3, // TODO: Handle "3 à 4" etc.
+    allowance: ({ ease, isLongSleeve = false }) => {
+      const offset = isLongSleeve ? 4 : 3;
+      return (ease - 2) / 2 + offset;
+    },
     divideByTwo: true,
   },
   { name: "Armbågdsvidd", allowanceType: "manual", divideByTwo: true },

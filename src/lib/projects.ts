@@ -15,6 +15,7 @@ export type Project = {
   slug: string;
   ease: Ease;
   size: number;
+  isLongSleeve: boolean;
   notes?: string;
   created: Date;
   updated: Date;
@@ -57,6 +58,7 @@ export function assertProjectFields(partialProject: AllOptionalExcept<Project, "
   partialProject.updated = now;
   partialProject.size = partialProject.size || 25;
   partialProject.ease = partialProject.ease || 12;
+  partialProject.isLongSleeve = partialProject.isLongSleeve || false;
   return partialProject as Project;
 }
 

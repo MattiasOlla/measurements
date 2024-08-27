@@ -79,7 +79,11 @@
       <label for="size">Storlek</label>
       <input id="size" type="number" size="3" bind:value={project.size} />
     </div>
-    {#if $page?.data?.session?.user}
+    <div>
+      <label for="isLongSleeve">Stor ärm</label>
+      <input id="isLongSleeve" type="checkbox" role="switch" bind:checked={project.isLongSleeve} />
+    </div>
+    {#if user}
       <details class="dropdown">
         <summary>Mer</summary>
         <ul>
@@ -107,6 +111,7 @@
           <MeasurementRow
             {measurement}
             ease={project.ease}
+            isLongSleeve={project.isLongSleeve}
             bind:value={project.fields[measurement.name].value}
             bind:manualAllowance={project.fields[measurement.name].manualAllowance}
             bind:outputs={measurementOutputs[measurement.name]}
@@ -144,7 +149,7 @@
     flex-direction: row;
     justify-content: flex-end;
     gap: 1em;
-    align-items: flex-end;
+    align-items: flex-start;
   }
 
   .options label {

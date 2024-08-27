@@ -6,6 +6,7 @@
   type Props = {
     measurement: Measurement;
     ease: Ease;
+    isLongSleeve: boolean;
     value?: number | null;
     manualAllowance?: number | null;
     outputs: MeasurementOutput;
@@ -13,6 +14,7 @@
   let {
     measurement,
     ease,
+    isLongSleeve = false,
     value = $bindable(),
     manualAllowance = $bindable(),
     outputs = $bindable(),
@@ -25,7 +27,7 @@
       case "manual":
         return manualAllowance || 0;
       case "table":
-        return measurement.allowance({ ease });
+        return measurement.allowance({ ease, isLongSleeve });
     }
   });
 
