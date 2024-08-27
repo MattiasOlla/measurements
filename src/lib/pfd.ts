@@ -49,6 +49,9 @@ export function projectToPdf(fullProject: ProjectWithComputedValues) {
           ],
         },
       },
+      {
+        text: [fullProject.notes || ""],
+      },
     ],
     styles: {
       header: {

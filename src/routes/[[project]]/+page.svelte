@@ -1,6 +1,7 @@
 <script lang="ts">
   import { replaceState } from "$app/navigation";
   import { page } from "$app/stores";
+  import { autosize } from "$lib/actions/autosize.js";
   import DerivedMeasurementRow from "$lib/components/DerivedMeasurementRow.svelte";
   import EditModal from "$lib/components/EditModal.svelte";
   import MeasurementRow from "$lib/components/MeasurementRow.svelte";
@@ -129,6 +130,12 @@
       </tbody>
     </table>
   </section>
+
+  <section>
+    <label for="notes">Anteckningar</label>
+    <textarea id="notes" bind:value={project.notes} use:autosize></textarea>
+  </section>
+
   <section class="options"><button onclick={downloadPDF}>Exportera som PDF</button></section>
 </div>
 
@@ -168,5 +175,9 @@
     margin: 0 auto;
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  textarea {
+    max-height: 70vh;
   }
 </style>
