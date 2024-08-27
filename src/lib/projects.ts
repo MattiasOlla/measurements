@@ -32,14 +32,9 @@ export type ProjectWithComputedValues = Project & {
   )[];
 };
 
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+type AllOptionalExcept<T, K extends keyof T> = Pick<T, K> & Omit<Partial<T>, K>;
 
-export function assertProjectFields(
-  partialProject: Optional<
-    Project,
-    "id" | "slug" | "created" | "updated" | "fields" | "ease" | "size"
-  >,
-) {
+export function assertProjectFields(partialProject: AllOptionalExcept<Project, "name">) {
   // @ts-expect-error Type not ready yet
   partialProject.fields = partialProject.fields || {};
 
