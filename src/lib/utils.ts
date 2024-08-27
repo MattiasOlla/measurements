@@ -1,6 +1,12 @@
-export function toFixed<T extends number | null>(value: T, decimals: number = 2): T {
-  if (value == null) return null as T;
-  return parseFloat(value.toFixed(decimals)) as T;
+export function toFixed(value: null | undefined, decimals?: number): null;
+export function toFixed(value: number | string, decimals?: number): number;
+export function toFixed(
+  value: number | string | null | undefined,
+  decimals: number = 2,
+): number | null {
+  if (value == null) return null;
+  if (typeof value === "string") return toFixed(parseFloat(value), decimals);
+  return parseFloat(value.toFixed(decimals));
 }
 
 export function downloadResponse(responseBlob: Blob, mimeType: string, filename: string) {
