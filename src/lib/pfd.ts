@@ -24,8 +24,11 @@ export function projectToPdf(fullProject: ProjectWithComputedValues) {
         style: "table",
         table: {
           body: [
-            ["Rörelsevidd", "Storlek"].map((val) => ({ text: val, style: "tableHeader" })),
-            [fullProject.ease, fullProject.size],
+            ["Rörelsevidd", "Storlek", "Ärm"].map((val) => ({
+              text: val,
+              style: "tableHeader",
+            })),
+            [fullProject.ease, fullProject.size, fullProject.isLongSleeve ? "Lång" : "Kort"],
           ],
         },
       },

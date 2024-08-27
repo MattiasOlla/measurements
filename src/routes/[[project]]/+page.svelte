@@ -80,7 +80,7 @@
       <input id="size" type="number" size="3" bind:value={project.size} />
     </div>
     <div>
-      <label for="isLongSleeve">Stor ärm</label>
+      <label for="isLongSleeve">Lång ärm</label>
       <input id="isLongSleeve" type="checkbox" role="switch" bind:checked={project.isLongSleeve} />
     </div>
     {#if user}
