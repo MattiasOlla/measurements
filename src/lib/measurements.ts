@@ -1,4 +1,4 @@
-export const eases = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24] as const;
+export const eases = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24] as const;
 export type Ease = (typeof eases)[number];
 
 type EaseArgs = {

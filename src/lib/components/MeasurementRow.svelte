@@ -21,6 +21,7 @@
   }: Props = $props();
 
   const allowance = $derived.by(() => {
+    if (ease === 0) return 0;
     switch (measurement.allowanceType) {
       case "none":
         return 0;
@@ -51,7 +52,9 @@
     <FloatingInput label={measurement.name} size={4} bind:value />
   </td>
   <td>
-    {#if measurement.allowanceType === "manual"}
+    {#if ease === 0}
+      <span>0</span>
+    {:else if measurement.allowanceType === "manual"}
       <input type="number" size="2" bind:value={manualAllowance} />
     {:else if measurement.allowanceType === "table"}
       <span>{allowance}</span>
