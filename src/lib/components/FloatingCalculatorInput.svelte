@@ -1,15 +1,37 @@
 <script lang="ts">
+  import { safeCalc } from "$lib/utils";
   import type { HTMLInputAttributes } from "svelte/elements";
-  type Props = Omit<HTMLInputAttributes, "type" | "value"> & {
+  type Props = Omit<HTMLInputAttributes, "type" | "inputmode" | "value"> & {
     value?: number | null;
     label: string;
   };
 
   let { label, value = $bindable(), ...props }: Props = $props();
+
+  let strValue = $state((value ?? "").toString());
+
+  $effect(() => {
+    if (!strValue) {
+      value = null;
+      return;
+    }
+    const calculated = safeCalc(strValue);
+    if (calculated !== null) value = calculated;
+  });
 </script>
 
 <div class="input-wrapper">
-  <input bind:value placeholder={label} type="number" {...props} />
+  <input
+    bind:value={strValue}
+    placeholder={label}
+    type="text"
+    inputmode="numeric"
+    onblur={() => {
+      strValue = (value ?? "").toString();
+      console.log("onblur");
+    }}
+    {...props}
+  />
   <label for={props.id}>{label}</label>
 </div>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { type Ease, type Measurement, type MeasurementOutput } from "../measurements";
   import { toFixed } from "../utils";
-  import FloatingInput from "./FloatingInput.svelte";
+  import FloatingCalculatorInput from "./FloatingCalculatorInput.svelte";
 
   type Props = {
     measurement: Measurement;
@@ -49,7 +49,7 @@
 
 <tr>
   <td>
-    <FloatingInput label={measurement.name} size={4} bind:value />
+    <FloatingCalculatorInput label={measurement.name} size={4} bind:value />
   </td>
   <td>
     {#if ease === 0}

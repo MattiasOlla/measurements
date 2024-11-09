@@ -23,3 +23,15 @@ export function downloadResponse(responseBlob: Blob, mimeType: string, filename:
   window.URL.revokeObjectURL(link);
   document.body.removeChild(aTag);
 }
+
+export function safeCalc(input: str) {
+  const sanitized = input.replace(",", ".").replace(/[^0-9().+\-*/ ]/g, "");
+  let val;
+  try {
+    val = eval(sanitized);
+  } catch {
+    return null;
+  }
+  if (typeof val === "number") return val;
+  return null;
+}
