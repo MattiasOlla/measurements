@@ -1,6 +1,6 @@
 ARG PORT=3000
 
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 ARG PORT
 WORKDIR /app
 COPY package*.json ./
@@ -10,7 +10,7 @@ ENV PORT=${PORT}
 RUN npm run build
 RUN npm prune --omit=dev
 
-FROM node:20-alpine
+FROM node:22-alpine
 ARG PORT
 WORKDIR /app
 COPY --from=builder /app/build build/
