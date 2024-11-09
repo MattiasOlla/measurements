@@ -33,17 +33,19 @@
   });
 
   $effect(() => {
-    if (value) {
-      const withEase = toFixed(value + allowance);
-      const withEaseHalved = toFixed((value + allowance) / 2);
-      outputs = {
-        base: value,
-        allowance,
-        withEase,
-        withEaseHalved,
-        constructionMeasurement: measurement.divideByTwo ? withEaseHalved : withEase,
-      };
+    if (value === null || value === undefined) {
+      outputs = {};
+      return;
     }
+    const withEase = toFixed(value + allowance);
+    const withEaseHalved = toFixed((value + allowance) / 2);
+    outputs = {
+      base: value,
+      allowance,
+      withEase,
+      withEaseHalved,
+      constructionMeasurement: measurement.divideByTwo ? withEaseHalved : withEase,
+    };
   });
 </script>
 
